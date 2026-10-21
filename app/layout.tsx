@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { KeyPrompt } from "@/components/KeyPrompt";
+import { hasServerKey, isMock } from "@/lib/pipeline/model";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,6 +17,8 @@ const NAV = [
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Decided on the server so the prompt never flashes for a deployment that has a key.
+  const needsKey = !hasServerKey() && !isMock();
   return (
     <html lang="en">
       <head>
@@ -41,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
         <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-10 sm:px-8">{children}</main>
+        <KeyPrompt needsKey={needsKey} />
         <footer className="border-t border-hairline">
           <div className="mx-auto flex max-w-6xl flex-wrap gap-x-8 gap-y-2 px-5 py-5 sm:px-8">
             <span className="t-mono text-chalk-faint">Tested: a probe or a recorded walkthrough saw it</span>

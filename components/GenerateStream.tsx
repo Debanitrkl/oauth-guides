@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { KEY_EVENT, openKeyPrompt, readKey, writeKey } from "@/lib/clientKey";
 import { PipelineEvent, ResolveResult } from "@/lib/pipeline/events";
 import { Guide, Probe, Source } from "@/lib/schema";
 import { GuideView } from "./GuideView";
@@ -17,8 +18,6 @@ const STAGE_LABEL: Record<string, string> = {
 };
 
 type Health = { mock: boolean; serverKey: boolean; model: string; store: string; composioKey: boolean };
-
-const KEY_STORAGE = "oauth-guides.anthropicKey";
 
 export function GenerateStream({ initialQuery }: { initialQuery: string }) {
   const [query, setQuery] = useState(initialQuery);
@@ -44,28 +43,27 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
   const ownKeyRef = useRef("");
   const [health, setHealth] = useState<Health | null>(null);
 
+  // Load the saved key on mount and whenever the site-wide prompt saves one.
   useEffect(() => {
     fetch("/api/health")
       .then((r) => r.json())
       .then((h: Health) => setHealth(h))
       .catch(() => setHealth(null));
-    const saved = readSavedKey();
-    if (saved) {
+    const load = () => {
+      const saved = readKey();
       queueMicrotask(() => {
-        setOwnKey(saved);
-        setRememberKey(true);
+        setOwnKey(saved?.key ?? "");
+        setRememberKey(saved ? saved.remembered : false);
       });
-    }
+    };
+    load();
+    window.addEventListener(KEY_EVENT, load);
+    return () => window.removeEventListener(KEY_EVENT, load);
   }, []);
 
   useEffect(() => {
     ownKeyRef.current = ownKey;
-    try {
-      if (rememberKey && ownKey) window.localStorage.setItem(KEY_STORAGE, ownKey);
-      else window.localStorage.removeItem(KEY_STORAGE);
-    } catch {
-      // storage unavailable
-    }
+    writeKey(ownKey, rememberKey);
   }, [ownKey, rememberKey]);
 
   useEffect(() => {
@@ -118,6 +116,8 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
         break;
       case "error":
         setError({ message: e.message, stage: e.stage, partial: e.partial });
+        // A run that started from the URL before the key was known: ask for it now.
+        if (/No Anthropic API key/i.test(e.message)) openKeyPrompt();
         break;
       case "log":
         setLogs((prev) => [...prev, e.message]);
@@ -187,13 +187,18 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
   }, [initialQuery, run]);
 
   const elapsed = startedAt && now ? Math.max(0, Math.round((now - startedAt) / 1000)) : 0;
-  const liveReady = health ? health.mock || health.serverKey || !!ownKey : true;
+  const liveReady = health ? health.mock || health.serverKey || !!ownKey.trim() : true;
 
   return (
     <div className="space-y-8">
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (!liveReady) {
+            // No key anywhere: ask for one instead of starting a run that fails at resolve.
+            openKeyPrompt();
+            return;
+          }
           const url = new URL(window.location.href);
           url.searchParams.set("q", query);
           window.history.replaceState(null, "", url.toString());
@@ -234,7 +239,12 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
           </button>
         </div>
         {!liveReady && !showKey && (
-          <p className="mt-3 text-sm text-chalk-mid">No server key is configured. Add your own key to run live generation, or the server answers from the fixture.</p>
+          <p className="mt-3 text-sm text-chalk-mid">
+            No server key is configured, so live generation needs your own Anthropic key.{" "}
+            <button type="button" onClick={openKeyPrompt} className="text-flare-soft underline-offset-4 hover:underline">
+              Add a key
+            </button>
+          </p>
         )}
         {showKey && (
           <div className="mt-4 border-t border-hairline pt-4">
@@ -252,6 +262,7 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
               <label className="flex items-center gap-2 text-sm text-chalk-mid">
                 <input type="checkbox" checked={rememberKey} onChange={(e) => setRememberKey(e.target.checked)} />
                 Remember in this browser
+                <span className="t-mono text-chalk-faint">{rememberKey ? "this browser only" : "this tab only"}</span>
               </label>
               {ownKey && (
                 <button type="button" onClick={() => setOwnKey("")} className="pill pill-ghost pill-sm">
@@ -383,14 +394,6 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
       {guide && <GuideView guide={guide} streaming={!done} />}
     </div>
   );
-}
-
-function readSavedKey(): string | null {
-  try {
-    return window.localStorage.getItem(KEY_STORAGE);
-  } catch {
-    return null;
-  }
 }
 
 function Stat({ label, value, mono }: { label: string; value: string; mono?: boolean }) {

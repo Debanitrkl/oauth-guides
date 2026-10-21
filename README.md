@@ -50,7 +50,7 @@ The app accepts `BUCKET_NAME`, `TIGRIS_BUCKET_NAME`, `TIGRIS_STORAGE_BUCKET` or 
 
 ## Design
 
-The interface uses the Basalt & Flare system: a warm near black base, chalk ink, one flare orange reserved for the survey line and links, Bricolage Grotesque for display, Schibsted Grotesk for reading, Fragment Mono for metadata. Tokens live in `app/globals.css`; meaning in chips is carried by weight and line (solid, hairline, dashed, faint), never by a second hue. `/how` is the build story: the problem, the 21 provider research table, the product decisions, the pipeline, the evidence policy, what was tested and left unverified, and the one day trade-offs, with links to the PRD and the system design.
+The interface uses the Basalt & Flare system: a warm near black base, chalk ink, one flare orange reserved for the survey line and links, Bricolage Grotesque for display, Schibsted Grotesk for reading, Fragment Mono for metadata. Tokens live in `app/globals.css`; meaning in chips is carried by weight and line (solid, hairline, dashed, faint), never by a second hue. `/how` is the build story: the problem, the 21 provider research table, the product decisions, the pipeline, the evidence policy, what was tested and left unverified, and the shortcuts with their exit signals.
 
 ## How it works
 
@@ -77,7 +77,7 @@ The model writes facts in exactly two stages. Everything that decides what the r
 7. Managed auth is step zero. If Composio manages an app for the toolkit, the guide says to start there.
 8. One pipeline produces library and live guides. Library files hold facts; the same rules derive the rest at read time.
 9. Credential free probes run live. Walkthroughs with real accounts are recorded, never automated.
-10. Shortcuts for a one day build, each with its exit signal: pipeline inside one request (move to a queue past 4 minutes), guides in git and an object bucket (Postgres when a correction queue arrives), in memory rate limits (Upstash at launch).
+10. Shortcuts taken for speed, each with its exit signal: pipeline inside one request (move to a queue past 4 minutes), guides in git and an object bucket (Postgres when a correction queue arrives), in memory rate limits (Upstash at launch).
 
 ## What was tested, corrected, and left unverified
 

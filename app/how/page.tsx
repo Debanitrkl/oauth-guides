@@ -1,12 +1,8 @@
-import Link from "next/link";
 import { LabelChip, TierChip } from "@/components/chips";
 
 export const metadata = {
   title: "How we built this · OAuth App Setup Guides",
 };
-
-const PRD_URL = "https://claude.ai/code/artifact/7b1ccaef-e1ac-4d26-a422-cf024a80a305";
-const DESIGN_URL = "https://claude.ai/code/artifact/d76e4807-ea85-4502-bd59-031b724b2ecc";
 
 type Row = { provider: string; url: string; tier: "open" | "capped" | "reviewed" | "gated"; gate: string; stated: string; reported: string };
 
@@ -75,19 +71,8 @@ export default function How() {
       <div className="rise border-b border-hairline-strong pb-6">
         <h1 className="t-headline text-chalk">How we built this</h1>
         <p className="t-lede mt-4">
-          The assignment: a developer building an agent needs their users to connect an app, and may first need an OAuth app approved by the provider. Help them see that path and make progress on it, as a library of guides plus live generation for any app. This page is the product thinking, the research, the architecture and the honest account of what was tested. Built in one day, 20 October 2026.
+          The assignment: a developer building an agent needs their users to connect an app, and may first need an OAuth app approved by the provider. Help them see that path and make progress on it, as a library of guides plus live generation for any app. This page is the product thinking, the research, the architecture and the honest account of what was tested.
         </p>
-        <div className="mt-6 flex flex-wrap gap-2">
-          <a href={PRD_URL} target="_blank" rel="noreferrer" className="pill pill-ghost pill-sm arrow no-underline">
-            Product requirements
-          </a>
-          <a href={DESIGN_URL} target="_blank" rel="noreferrer" className="pill pill-ghost pill-sm arrow no-underline">
-            System design and ADRs
-          </a>
-          <Link href="/about" className="pill pill-ghost pill-sm no-underline">
-            Reading a guide
-          </Link>
-        </div>
       </div>
 
       <section>
@@ -217,8 +202,8 @@ export default function How() {
       </section>
 
       <section>
-        <h2 className="t-title text-chalk">Shortcuts for a one day build</h2>
-        <p className="mt-4">Each row is a decision taken for speed, with the signal that ends it. The reasoning is in the ADRs linked above.</p>
+        <h2 className="t-title text-chalk">Shortcuts and their exit signals</h2>
+        <p className="mt-4">Each row is a decision taken for speed, with the signal that ends it.</p>
         <div className="mt-5 overflow-x-auto">
           <table>
             <thead>
@@ -239,22 +224,6 @@ export default function How() {
             </tbody>
           </table>
         </div>
-      </section>
-
-      <section>
-        <h2 className="t-title text-chalk">The build day</h2>
-        <ol className="ledger mt-5 border-t border-hairline-strong !max-w-none">
-          {[
-            ["Morning", "Research: three agents read the official and community pages for 21 providers and labelled every fact Documented, Reported or Unverified. The PRD and the system design with six ADRs were written from the findings."],
-            ["Afternoon", "Schema, rules with unit tests, the renderer, the pipeline with streaming, span verification, the SSRF guard and the probes. A fixture mode so the whole path runs without network or a model."],
-            ["Evening", "Six quote collectors gathered verbatim quotes per provider; the guides were written as facts and validated through the same rules the live path uses. Fourteen quotes re-checked. README, managed auth list, launcher scripts, this page."],
-          ].map(([when, what]) => (
-            <li key={when} className="grid grid-cols-[6rem_1fr] gap-x-4 py-4">
-              <span className="t-label pt-1">{when}</span>
-              <p className="text-sm">{what}</p>
-            </li>
-          ))}
-        </ol>
       </section>
 
       <section>
