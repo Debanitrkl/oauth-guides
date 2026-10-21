@@ -1,0 +1,121 @@
+{
+  "slug": "github",
+  "schemaVersion": 1,
+  "provider": {
+    "name": "GitHub",
+    "domain": "github.com",
+    "officialDomains": ["github.com"],
+    "portalUrl": "https://github.com/settings/developers",
+    "docsUrl": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app",
+    "oauthProducts": ["OAuth Apps", "GitHub Apps"],
+    "variantNote": "Covers github.com. GitHub Enterprise Server has the same console under its own domain.",
+    "composioSlug": "github"
+  },
+  "generatedAt": "2026-10-20T15:00:00.000Z",
+  "verifiedOn": "2026-10-20",
+  "reviewState": "reviewed",
+  "review": {
+    "reviewedBy": "Deba",
+    "reviewedOn": "2026-10-20",
+    "corrections": [
+      "The first research pass treated OAuth Apps and GitHub Apps as one thing. They are two registrations with different token models; the guide covers both and says which GitHub recommends.",
+      "Marketplace listing requirements were first read as setup requirements. They apply only if you list, so they are facts here, not artifacts you must produce to go live."
+    ]
+  },
+  "managedAuth": {
+    "managed": true,
+    "schemes": ["OAUTH2"],
+    "source": "cache",
+    "checkedAt": "2026-10-20",
+    "customAppReasons": [
+      "Your app name on the consent screen instead of Composio's",
+      "Scopes beyond Composio's defaults",
+      "A dedicated rate limit quota instead of one shared across Composio users",
+      "Polling triggers faster than the 15 minute managed floor",
+      "A self hosted or regional provider instance",
+      "Enterprise customers who require your branding end to end"
+    ]
+  },
+  "scopeClasses": [
+    {
+      "id": "default",
+      "name": "All scopes",
+      "examples": ["read:user", "repo", "read:org"],
+      "description": "GitHub reviews nothing before external users can authorize an OAuth app or install a public GitHub App. The only gate you can hit is a customer's organization policy."
+    }
+  ],
+  "claims": [
+    { "id": "c1", "text": "You register an OAuth app from Settings, then Developer settings, then OAuth apps.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "In the left sidebar, click OAuth apps." },
+    { "id": "c2", "text": "The registration form asks for an application name.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "In \"Application name\", type the name of your app." },
+    { "id": "c3", "text": "A homepage URL for your app is a required field.", "kind": "requirement", "label": "documented", "sourceId": "src-1", "quote": "In \"Homepage URL\", type the full URL to your app's website.", "value": { "artifact": "homepage" } },
+    { "id": "c4", "text": "An authorization callback URL is a required field.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "In \"Authorization callback URL\", type the callback URL of your app." },
+    { "id": "c5", "text": "An OAuth app can have up to 10 callback URLs.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "You can enter up to 10 callback URLs." },
+    { "id": "c6", "text": "A public GitHub App can be installed and authorized by any GitHub user, with no review by GitHub.", "kind": "gate", "label": "documented", "sourceId": "src-2", "quote": "If you set your GitHub App registration to public, any user on GitHub can install it and authorize it.", "value": { "gateType": "none" } },
+    { "id": "c7", "text": "A private GitHub App can only be installed on the owner's own account or organization.", "kind": "fact", "label": "documented", "sourceId": "src-2", "quote": "Private GitHub Apps can only be installed on the user or organization account of the app owner." },
+    { "id": "c8", "text": "Scopes are requested at authorization time as a space delimited list, not fixed at registration.", "kind": "fact", "label": "documented", "sourceId": "src-3", "quote": "A space-delimited list of scopes." },
+    { "id": "c9", "text": "Organization owners can restrict which OAuth apps reach their organization's repositories.", "kind": "fact", "label": "documented", "sourceId": "src-4", "quote": "Organizations can choose which OAuth apps have access to their repositories" },
+    { "id": "c10", "text": "When an organization restricts OAuth apps, a member can request the owner's approval for yours.", "kind": "fact", "label": "documented", "sourceId": "src-4", "quote": "Users can request owner approval for OAuth apps they'd like to use" },
+    { "id": "c11", "text": "Only if you list on the GitHub Marketplace: the listing needs a valid privacy policy link.", "kind": "fact", "label": "documented", "sourceId": "src-5", "quote": "Listings must have a valid link to a privacy policy." },
+    { "id": "c12", "text": "Only if you list on the GitHub Marketplace: the listing needs a support link.", "kind": "fact", "label": "documented", "sourceId": "src-5", "quote": "Listings must provide a method to receive support through a valid support link" },
+    { "id": "c13", "text": "Paid Marketplace plans require the owning organization to be a verified publisher.", "kind": "fact", "label": "documented", "sourceId": "src-5", "quote": "your app must be owned by an organization that is a verified publisher." },
+    { "id": "c14", "text": "Paid Marketplace plans expect a GitHub App to have at least 100 installations.", "kind": "fact", "label": "documented", "sourceId": "src-5", "quote": "GitHub Apps should have a minimum of 100 installations." },
+    { "id": "c15", "text": "Paid Marketplace plans expect an OAuth app to have at least 200 users.", "kind": "fact", "label": "documented", "sourceId": "src-5", "quote": "OAuth apps should have a minimum of 200 users." },
+    { "id": "c16", "text": "Publisher verification requires two factor authentication on the organization.", "kind": "fact", "label": "documented", "sourceId": "src-6", "quote": "that you've enabled two-factor authentication for your organization" },
+    { "id": "c17", "text": "Publisher verification requires a verified organization domain.", "kind": "fact", "label": "documented", "sourceId": "src-6", "quote": "that your organization's domain has been verified." },
+    { "id": "c18", "text": "Authenticated requests with a user token count against a limit of 5,000 requests per hour.", "kind": "limit_after", "label": "documented", "sourceId": "src-7", "quote": "All of these requests count towards your personal rate limit of 5,000 requests per hour." },
+    { "id": "c19", "text": "A GitHub App installation gets a minimum of 5,000 requests per hour.", "kind": "limit_after", "label": "documented", "sourceId": "src-7", "quote": "use the installation's minimum rate limit of 5,000 requests per hour." },
+    { "id": "c20", "text": "GitHub recommends GitHub Apps over OAuth apps.", "kind": "fact", "label": "documented", "sourceId": "src-8", "quote": "In general, GitHub Apps are preferred over OAuth apps." },
+    { "id": "c21", "text": "GitHub App installation tokens expire after one hour, so plan token refresh from the start.", "kind": "fact", "label": "documented", "sourceId": "src-8", "quote": "Installation access tokens expire after a predefined amount of time (currently 1 hour)." },
+    { "id": "c22", "text": "A user sent to the authorize endpoint with an unregistered client_id sees GitHub's sign in page first; the client is checked only after sign in, so a wrong client ID looks like a normal login to your users until the error appears.", "kind": "fact", "label": "tested", "probeId": "probe-authorize" }
+  ],
+  "sources": [
+    { "id": "src-1", "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app", "host": "docs.github.com", "official": true, "title": "Creating an OAuth app", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-2", "url": "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/making-a-github-app-public-or-private", "host": "docs.github.com", "official": true, "title": "Making a GitHub App public or private", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-3", "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps", "host": "docs.github.com", "official": true, "title": "Authorizing OAuth apps", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-4", "url": "https://docs.github.com/en/organizations/managing-oauth-access-to-your-organizations-data/about-oauth-app-access-restrictions", "host": "docs.github.com", "official": true, "title": "About OAuth app access restrictions", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-5", "url": "https://docs.github.com/en/apps/github-marketplace/creating-apps-for-github-marketplace/requirements-for-listing-an-app", "host": "docs.github.com", "official": true, "title": "Requirements for listing an app", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-6", "url": "https://docs.github.com/en/apps/github-marketplace/github-marketplace-overview/applying-for-publisher-verification-for-your-organization", "host": "docs.github.com", "official": true, "title": "Applying for publisher verification for your organization", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-7", "url": "https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api", "host": "docs.github.com", "official": true, "title": "Rate limits for the REST API", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-8", "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps", "host": "docs.github.com", "official": true, "title": "Differences between GitHub Apps and OAuth apps", "retrievedAt": "2026-10-20", "status": "hand_checked" }
+  ],
+  "probes": [
+    { "id": "probe-authorize", "kind": "authorize", "target": "https://github.com/login/oauth/authorize", "ok": true, "summary": "An unregistered client_id gets GitHub's sign in page (title: Sign in to GitHub) before any client check.", "result": { "title": "Sign in to GitHub · GitHub", "loginWall": true, "method": "fetch tool, 2026-10-20" }, "ranAt": "2026-10-20T14:40:00.000Z" },
+    { "id": "probe-discovery", "kind": "discovery", "target": "https://github.com/.well-known/openid-configuration", "ok": true, "summary": "No OpenID discovery document at github.com; the authorize and token endpoints come from the docs.", "result": { "found": false, "method": "fetch tool, 2026-10-20" }, "ranAt": "2026-10-20T14:40:00.000Z" },
+    { "id": "probe-portal", "kind": "portal_login_wall", "target": "https://github.com/settings/developers", "ok": false, "summary": "Probe could not run: github.com disallows automated fetching of /settings/developers (robots).", "result": { "blocked": "robots" }, "ranAt": "2026-10-20T14:40:00.000Z" }
+  ],
+  "steps": [
+    { "n": 1, "title": "Decide between an OAuth app and a GitHub App", "detail": "GitHub recommends GitHub Apps: fine grained permissions and one hour installation tokens. Pick an OAuth app only when you need a plain user token flow.", "owner": "agent", "inputs": ["Whether you act on behalf of users or on repositories"], "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps", "claimIds": ["c20", "c21"] },
+    { "n": 2, "title": "Sign in to GitHub and open Settings, Developer settings, OAuth apps", "owner": "only_you", "inputs": ["A GitHub account; an organization account if the app should be owned by the org"], "url": "https://github.com/settings/developers", "claimIds": ["c1"] },
+    { "n": 3, "title": "Register the app with a name, a homepage URL and your callback URLs", "detail": "Up to 10 callback URLs. Use the redirect URI from your Composio auth config.", "owner": "agent", "inputs": ["Application name", "Homepage URL", "Callback URL list"], "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app", "claimIds": ["c2", "c3", "c4", "c5"] },
+    { "n": 4, "title": "Generate the client secret and store the client ID and secret in your auth config", "owner": "agent", "inputs": ["A place to keep the secret"], "claimIds": ["c1"] },
+    { "n": 5, "title": "Choose the scopes you request at authorization time", "detail": "Scopes are a space delimited list in the authorize request. Request the least you need; organizations review scope use when approving apps.", "owner": "agent", "inputs": ["Scope list"], "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps", "claimIds": ["c8"] },
+    { "n": 6, "title": "Ship. Any GitHub user can authorize the app now", "detail": "For a GitHub App, set it to public so any account can install it. There is no GitHub review before external users connect.", "owner": "agent", "inputs": [], "claimIds": ["c6", "c7"] },
+    { "n": 7, "title": "Plan for organization approvals", "detail": "Customers whose organizations restrict OAuth apps will need an owner to approve yours. Give users the request flow and keep the scope list small.", "owner": "agent", "inputs": ["A short note for customers' org owners"], "url": "https://docs.github.com/en/organizations/managing-oauth-access-to-your-organizations-data/about-oauth-app-access-restrictions", "claimIds": ["c9", "c10"] },
+    { "n": 8, "title": "Only if you list on the Marketplace: publish a privacy policy and a support link, and get publisher verification for paid plans", "detail": "Listing is optional. Paid plans expect 100 installations (GitHub App) or 200 users (OAuth app) and a verified publisher organization with 2FA and a verified domain.", "owner": "agent_prepares", "inputs": ["Privacy policy URL", "Support URL", "Organization 2FA and verified domain"], "url": "https://docs.github.com/en/apps/github-marketplace/creating-apps-for-github-marketplace/requirements-for-listing-an-app", "claimIds": ["c11", "c12", "c13", "c14", "c15", "c16", "c17"] }
+  ],
+  "playbooks": [
+    { "symptom": "A user in a company account authorizes the app but it cannot see their organization's repositories.", "cause": "The organization restricts OAuth app access and your app has not been approved by an owner.", "fix": "Ask the user to request owner approval from the authorization page, or have an organization owner approve the app under the organization's third party access settings.", "claimIds": ["c9", "c10"] },
+    { "symptom": "Users report hitting rate limits after your app grows.", "cause": "User tokens share the user's 5,000 requests per hour. Installation tokens get their own 5,000 minimum.", "fix": "Move to a GitHub App so each installation has its own limit, and cache or use conditional requests.", "claimIds": ["c18", "c19"] },
+    { "symptom": "Users see a GitHub sign in page and then an error after signing in.", "cause": "The client_id in your authorize URL is wrong or the callback URL is not one of the registered ones. GitHub checks the client after sign in.", "fix": "Compare the client_id and redirect_uri in the authorize request with the app registration. Up to 10 callback URLs can be registered.", "claimIds": ["c22", "c5"] }
+  ],
+  "artifacts": [
+    { "name": "Homepage URL", "form": "A public URL for the app's website, entered at registration", "kind": "homepage", "claimIds": ["c3"] }
+  ],
+  "gaps": [
+    { "what": "The developer settings page could not be probed because github.com disallows automated fetching of it; the sign in requirement rests on the docs and on the authorize probe", "page": "https://github.com/settings/developers" }
+  ],
+  "verificationNote": {
+    "tested": [
+      "Authorize endpoint probe with an unregistered client_id: GitHub answers with its sign in page, not an error, so a wrong client ID is invisible until after login.",
+      "Discovery probe: no OpenID discovery document at github.com."
+    ],
+    "corrected": [
+      "Marketplace listing requirements are not setup requirements; they moved from artifacts to facts.",
+      "OAuth Apps and GitHub Apps are separate registrations; the guide now says which one GitHub recommends and why."
+    ],
+    "unverified": [
+      "No recorded walkthrough yet: the registration screens are described from the docs, not from a session. A walkthrough with a real account is planned and will add Tested steps.",
+      "GitHub Enterprise Server differences are not covered."
+    ]
+  }
+}

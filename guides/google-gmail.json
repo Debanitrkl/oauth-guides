@@ -1,0 +1,141 @@
+{
+  "slug": "google-gmail",
+  "schemaVersion": 1,
+  "provider": {
+    "name": "Google (Gmail and Workspace APIs)",
+    "domain": "google.com",
+    "officialDomains": ["google.com", "googleapis.com", "developers.google.com", "cloud.google.com"],
+    "portalUrl": "https://console.cloud.google.com/auth/overview",
+    "docsUrl": "https://support.google.com/cloud/answer/13463817",
+    "oauthProducts": ["Google Auth Platform OAuth client (Gmail, Calendar, Drive and other Google APIs)"],
+    "variantNote": "The tier depends on the scopes you request. Pick the scope class first.",
+    "composioSlug": "gmail"
+  },
+  "generatedAt": "2026-10-20T15:30:00.000Z",
+  "verifiedOn": "2026-10-20",
+  "reviewState": "reviewed",
+  "review": {
+    "reviewedBy": "Deba",
+    "reviewedOn": "2026-10-20",
+    "corrections": [
+      "The first pass said the 100 user cap resets. Google's unverified apps page says the app is limited to 100 new users until verified and does not mention a reset; the guide now says exactly that.",
+      "Official durations are labelled as Google's estimates, which Google itself says are not guaranteed, and the 2026 developer reports of six weeks or more sit beside them."
+    ]
+  },
+  "managedAuth": {
+    "managed": true,
+    "schemes": ["OAUTH2"],
+    "source": "cache",
+    "checkedAt": "2026-10-20",
+    "customAppReasons": [
+      "Your app name on the consent screen instead of Composio's",
+      "Scopes beyond Composio's defaults",
+      "A dedicated rate limit quota instead of one shared across Composio users",
+      "Polling triggers faster than the 15 minute managed floor",
+      "A self hosted or regional provider instance",
+      "Enterprise customers who require your branding end to end"
+    ]
+  },
+  "scopeClasses": [
+    { "id": "basic", "name": "Non sensitive scopes", "examples": ["openid", "email", "profile", "drive.file"], "description": "Sign in and per file access. No scope verification. Brand verification only if you want your name and logo shown." },
+    { "id": "sensitive", "name": "Sensitive scopes", "examples": ["calendar", "contacts", "youtube.readonly"], "description": "Scope verification required before more than 100 users can connect. Google states 10 business days; developers report six weeks or more in 2026." },
+    { "id": "restricted", "name": "Restricted scopes", "examples": ["gmail.readonly", "gmail.modify", "drive"], "description": "Scope verification plus an annual CASA security assessment by a paid third party assessor. Google states 6 weeks for the verification alone." }
+  ],
+  "claims": [
+    { "id": "c1", "text": "Google requires three types of verification for apps that access user data through OAuth: brand, sensitive scope and restricted scope.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "There are three types of verification that Google requires to access user data via OAuth." },
+    { "id": "c2", "text": "Apps that request sensitive scopes must pass scope verification before external users beyond the cap can connect.", "kind": "gate", "label": "documented", "sourceId": "src-1", "quote": "Failure to get your app verified for sensitive and/or restricted scopes.", "scopeClassId": "sensitive", "value": { "gateType": "review" } },
+    { "id": "c3", "text": "Apps that request restricted scopes must pass scope verification.", "kind": "gate", "label": "documented", "sourceId": "src-1", "quote": "Failure to get your app verified for sensitive and/or restricted scopes.", "scopeClassId": "restricted", "value": { "gateType": "review" } },
+    { "id": "c4", "text": "Google states 2 to 3 business days for brand verification.", "kind": "duration", "label": "documented", "sourceId": "src-1", "quote": "2-3 Business days", "value": { "lowDays": 3, "highDays": 4, "stage": "Brand verification, Google's estimate" } },
+    { "id": "c5", "text": "Google states 10 business days for sensitive scope verification.", "kind": "duration", "label": "documented", "sourceId": "src-1", "quote": "10 Business days", "scopeClassId": "sensitive", "value": { "lowDays": 14, "highDays": 14, "stage": "Sensitive scope verification, Google's estimate" } },
+    { "id": "c6", "text": "Google states 6 weeks for restricted scope verification.", "kind": "duration", "label": "documented", "sourceId": "src-1", "quote": "6 weeks", "scopeClassId": "restricted", "value": { "lowDays": 42, "highDays": 42, "stage": "Restricted scope verification, Google's estimate" } },
+    { "id": "c7", "text": "Google says these durations are estimates, not guaranteed, and depend on how fast you respond.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "Please note that these estimates are not guaranteed and will vary based on developer responsiveness" },
+    { "id": "c8", "text": "Restricted scopes require an additional security assessment on top of verification.", "kind": "gate", "label": "documented", "sourceId": "src-1", "quote": "An additional Security assessment is required to demonstrate a minimum level of capability", "scopeClassId": "restricted", "value": { "gateType": "paid_assessment" } },
+    { "id": "c9", "text": "You pay a CASA authorized assessor for the security assessment.", "kind": "cost", "label": "documented", "sourceId": "src-1", "quote": "You can choose to reachout to the CASA authorized assessor and pay for the assessment.", "scopeClassId": "restricted", "value": { "amount": "assessor fee, set by the assessor" } },
+    { "id": "c10", "text": "Until verified, users of an app with sensitive or restricted scopes may see an unverified app screen before the consent screen.", "kind": "fact", "label": "documented", "sourceId": "src-2", "quote": "The app or script might display an \"unverified app\" screen before it displays the consent screen." },
+    { "id": "c11", "text": "An unverified app using sensitive scopes is limited to 100 new users until it is verified.", "kind": "cap", "label": "documented", "sourceId": "src-2", "quote": "your app will be limited to 100 new users until it is verified.", "scopeClassId": "sensitive", "value": { "limit": 100, "unit": "users", "liftedBy": "scope verification" } },
+    { "id": "c12", "text": "An unverified app using restricted scopes is limited to 100 new users until it is verified.", "kind": "cap", "label": "documented", "sourceId": "src-2", "quote": "your app will be limited to 100 new users until it is verified.", "scopeClassId": "restricted", "value": { "limit": 100, "unit": "users", "liftedBy": "scope verification and security assessment" } },
+    { "id": "c13", "text": "An internal web app for users in your own Workspace domain does not need verification.", "kind": "fact", "label": "documented", "sourceId": "src-2", "quote": "if your app is an internal web app for users in the same G Suite domain" },
+    { "id": "c14", "text": "An app in Testing status can have at most 100 test users listed on the consent screen.", "kind": "tester_limit", "label": "documented", "sourceId": "src-3", "quote": "are limited to up to 100 test users listed in the OAuth consent screen.", "value": { "limit": 100, "unit": "test users" } },
+    { "id": "c15", "text": "Authorizations by test users expire seven days after consent while the app is in Testing.", "kind": "fact", "label": "documented", "sourceId": "src-3", "quote": "Authorizations by a test user will expire seven days from the time of consent." },
+    { "id": "c16", "text": "Projects with the External user type are available to any Google Account once published.", "kind": "fact", "label": "documented", "sourceId": "src-3", "quote": "Projects configured with a user type of External are available to any user with a Google Account." },
+    { "id": "c17", "text": "The Internal user type limits the app to members of your own organization and skips the verification path.", "kind": "fact", "label": "documented", "sourceId": "src-3", "quote": "can configure Internal users to limit authorization requests to members of the organization." },
+    { "id": "c18", "text": "The homepage must be hosted on a verified domain you own.", "kind": "requirement", "label": "documented", "sourceId": "src-4", "quote": "The homepage must be hosted on a verified domain you own.", "value": { "artifact": "homepage" } },
+    { "id": "c19", "text": "The privacy policy should live on the same domain as the homepage.", "kind": "requirement", "label": "documented", "sourceId": "src-4", "quote": "The Privacy Policy should be hosted within the domain that hosts your homepage.", "value": { "artifact": "privacy_policy" } },
+    { "id": "c20", "text": "Domain ownership is verified through Google Search Console.", "kind": "requirement", "label": "documented", "sourceId": "src-4", "quote": "must verify ownership of the authorized domain using Google Search Console.", "value": { "artifact": "domain_verification" } },
+    { "id": "c21", "text": "The demo video must show the end to end flow including the OAuth grant.", "kind": "requirement", "label": "documented", "sourceId": "src-4", "quote": "Must show the end-to-end flow of your app including the OAuth grant process.", "value": { "artifact": "demo_video" } },
+    { "id": "c22", "text": "The demo video must show the complete OAuth consent screen.", "kind": "requirement", "label": "documented", "sourceId": "src-4", "quote": "Show the complete OAuth Consent Screen", "value": { "artifact": "demo_video" } },
+    { "id": "c23", "text": "A scope justification judged insufficient gets the verification request rejected.", "kind": "rejection_reason", "label": "documented", "sourceId": "src-4", "quote": "If your justification is deemed insufficient, your app verification request may be rejected." },
+    { "id": "c24", "text": "Apps with restricted scopes must undergo an annual security assessment.", "kind": "limit_after", "label": "documented", "sourceId": "src-5", "quote": "applications requesting access to restricted scopes must undergo an annual security assessment.", "scopeClassId": "restricted" },
+    { "id": "c25", "text": "The assessor issues a Letter of Validation that you submit to Google.", "kind": "fact", "label": "documented", "sourceId": "src-5", "quote": "a \"Letter of Validation\" (LOV) from the security assessor", "scopeClassId": "restricted" },
+    { "id": "c26", "text": "All assessed applications must be revalidated every year.", "kind": "limit_after", "label": "documented", "sourceId": "src-5", "quote": "All applications must be revalidated every year.", "scopeClassId": "restricted" },
+    { "id": "c27", "text": "Apps with restricted scopes must complete re verification annually.", "kind": "limit_after", "label": "documented", "sourceId": "src-6", "quote": "Apps requesting restricted scopes data need to complete “re-verification” annually.", "scopeClassId": "restricted" },
+    { "id": "c28", "text": "Some changes to a verified app trigger re verification.", "kind": "limit_after", "label": "documented", "sourceId": "src-6", "quote": "Learn more about which changes need re-verification." },
+    { "id": "c29", "text": "Nango reports 5 to 20 days from requesting the restricted scope review to full verification when prepared.", "kind": "duration", "label": "reported", "sourceId": "src-7", "quote": "If you prepare with this guide, you can expect 5-20 days from requesting review being fully verified.", "scopeClassId": "restricted", "value": { "lowDays": 5, "highDays": 20, "stage": "Restricted scope review, vendor report" } },
+    { "id": "c30", "text": "A reported CASA assessor price at the low end is about USD 700.", "kind": "cost", "label": "reported", "sourceId": "src-7", "quote": "Netsentries - ~$700", "scopeClassId": "restricted", "value": { "amount": "about USD 700" } },
+    { "id": "c31", "text": "A reported CASA assessor price at the high end is USD 3,000 or more.", "kind": "cost", "label": "reported", "sourceId": "src-7", "quote": "Prescient security - $3,000+", "scopeClassId": "restricted", "value": { "amount": "USD 3,000 or more" } },
+    { "id": "c32", "text": "A developer reports a sensitive scope verification stuck for more than six weeks with no email from Trust and Safety.", "kind": "duration", "label": "reported", "sourceId": "src-8", "quote": "Sensitive scope verification stuck 6+ weeks, never received any Trust & Safety email", "scopeClassId": "sensitive", "value": { "lowDays": 42, "highDays": 56, "stage": "Sensitive scope verification, developer report 2026" } },
+    { "id": "c33", "text": "The same developer reports being stuck at the privacy policy requirements stage for over six weeks.", "kind": "rejection_reason", "label": "reported", "sourceId": "src-8", "quote": "Our OAuth app has been stuck on the “Privacy policy requirements” stage for over six weeks", "scopeClassId": "sensitive" },
+    { "id": "c34", "text": "accounts.google.com publishes an OpenID discovery document with the authorize endpoint https://accounts.google.com/o/oauth2/v2/auth, the token endpoint https://oauth2.googleapis.com/token and PKCE with S256.", "kind": "fact", "label": "tested", "probeId": "probe-discovery" },
+    { "id": "c35", "text": "A user sent to the authorize endpoint with an unregistered client ID gets a Google error page, Error 400 (Bad Request) at accounts.google.com/signin/oauth/error, with no sign in step and no hint about the client ID.", "kind": "fact", "label": "tested", "probeId": "probe-authorize" }
+  ],
+  "sources": [
+    { "id": "src-1", "url": "https://support.google.com/cloud/answer/13463817", "host": "support.google.com", "official": true, "title": "OAuth App Verification: Frequently Asked Questions", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-2", "url": "https://support.google.com/cloud/answer/7454865", "host": "support.google.com", "official": true, "title": "Unverified apps", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-3", "url": "https://support.google.com/cloud/answer/15549945", "host": "support.google.com", "official": true, "title": "Manage App Audience", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-4", "url": "https://support.google.com/cloud/answer/13464321", "host": "support.google.com", "official": true, "title": "Verification requirements", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-5", "url": "https://support.google.com/cloud/answer/13465431", "host": "support.google.com", "official": true, "title": "Security Assessment", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-6", "url": "https://support.google.com/cloud/answer/13463073", "host": "support.google.com", "official": true, "title": "OAuth App Verification Help Center", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-7", "url": "https://docs.nango.dev/integrations/google-security-review", "host": "docs.nango.dev", "official": false, "title": "Nango: Google security review", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-8", "url": "https://discuss.google.dev/t/sensitive-scope-verification-stuck-6-weeks-never-received-any-trust-safety-email/376936", "host": "discuss.google.dev", "official": false, "title": "Sensitive scope verification stuck 6+ weeks (developer forum)", "retrievedAt": "2026-10-20", "status": "hand_checked" }
+  ],
+  "probes": [
+    { "id": "probe-discovery", "kind": "discovery", "target": "https://accounts.google.com/.well-known/openid-configuration", "ok": true, "summary": "Discovery document found: authorize https://accounts.google.com/o/oauth2/v2/auth, token https://oauth2.googleapis.com/token, 3 scopes listed, PKCE S256 supported.", "result": { "authorization_endpoint": "https://accounts.google.com/o/oauth2/v2/auth", "token_endpoint": "https://oauth2.googleapis.com/token", "scopes_supported": ["openid", "email", "profile"], "code_challenge_methods_supported": ["plain", "S256"], "method": "fetch tool, 2026-10-20" }, "ranAt": "2026-10-20T14:55:00.000Z" },
+    { "id": "probe-authorize", "kind": "authorize", "target": "https://accounts.google.com/o/oauth2/v2/auth", "ok": true, "summary": "An unregistered client_id gets Error 400 (Bad Request) at accounts.google.com/signin/oauth/error, with no mention of the client ID.", "result": { "status": 400, "finalUrl": "https://accounts.google.com/signin/oauth/error", "mentions": null, "loginWall": false, "method": "fetch tool, 2026-10-20" }, "ranAt": "2026-10-20T14:55:00.000Z" }
+  ],
+  "steps": [
+    { "n": 1, "title": "Classify the scopes you need: non sensitive, sensitive or restricted", "detail": "This decides everything below. Gmail read and modify scopes are restricted. Pick the narrowest class that does the job; drive.file instead of drive, for example.", "owner": "agent", "inputs": ["The exact scope list your agent needs"], "url": "https://support.google.com/cloud/answer/13463817", "claimIds": ["c1"] },
+    { "n": 2, "title": "Sign in to Google Cloud, create a project and open the Google Auth Platform", "owner": "only_you", "inputs": ["A Google account; a Workspace organization if you want the Internal user type"], "url": "https://console.cloud.google.com/auth/overview", "claimIds": ["c16", "c17"] },
+    { "n": 3, "title": "Configure the consent screen with the External user type, your app name, support email, homepage, privacy policy and authorized domains", "detail": "The homepage must sit on a domain you own and the privacy policy on that same domain.", "owner": "agent", "inputs": ["App name", "Support email", "Homepage URL", "Privacy policy URL", "Authorized domains"], "claimIds": ["c16", "c18", "c19"], "scopeClassIds": ["basic", "sensitive", "restricted"] },
+    { "n": 4, "title": "Verify your authorized domains in Google Search Console", "owner": "agent", "inputs": ["Access to the domain's DNS or site"], "url": "https://support.google.com/cloud/answer/13464321", "claimIds": ["c20"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "n": 5, "title": "Create the OAuth client ID, add your redirect URIs and store the client ID and secret in your auth config", "owner": "agent", "inputs": ["Redirect URI from your auth config"], "claimIds": ["c34"] },
+    { "n": 6, "title": "Keep the app in Testing while you build, with up to 100 test users whose grants expire every 7 days", "owner": "agent", "inputs": ["Tester email addresses"], "url": "https://support.google.com/cloud/answer/15549945", "claimIds": ["c14", "c15"] },
+    { "n": 7, "title": "Publish to production. With non sensitive scopes you are done; with sensitive or restricted scopes you can ship to 100 users while verification runs", "detail": "Users see an unverified app warning until verification passes, and the 100 user limit does not lift on its own.", "owner": "agent", "inputs": [], "claimIds": ["c10", "c11", "c12"] },
+    { "n": 8, "title": "Write the scope justification for each sensitive or restricted scope", "detail": "Name the feature each scope powers and why a narrower scope will not do. An insufficient justification is a stated rejection reason.", "owner": "agent_prepares", "inputs": ["A sentence per scope tying it to a visible feature"], "claimIds": ["c23"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "n": 9, "title": "Record the demo video: the full flow from sign in through the complete consent screen to the feature using the data", "owner": "agent_prepares", "inputs": ["A test account", "Screen recorder", "English narration or captions"], "claimIds": ["c21", "c22"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "n": 10, "title": "Submit for verification from the Verification Center and answer Trust and Safety emails the same day", "detail": "Google states 10 business days for sensitive scopes and 6 weeks for restricted, and says the estimates are not guaranteed. Developers in 2026 report six weeks or more for sensitive scopes.", "owner": "only_you", "inputs": ["Completed consent screen", "Justifications", "Demo video link"], "claimIds": ["c5", "c6", "c7", "c32"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "n": 11, "title": "For restricted scopes: book a CASA assessor, pass the assessment, and submit the Letter of Validation", "detail": "You pay the assessor. Reported prices run from about USD 700 to USD 3,000 or more. The assessment repeats every year.", "owner": "only_you", "inputs": ["Assessor engagement", "Your app's security evidence"], "url": "https://support.google.com/cloud/answer/13465431", "claimIds": ["c8", "c9", "c24", "c25", "c30", "c31"], "scopeClassIds": ["restricted"] },
+    { "n": 12, "title": "Put annual re verification and the assessment renewal on the calendar", "owner": "agent", "inputs": [], "claimIds": ["c26", "c27", "c28"], "scopeClassIds": ["restricted"] }
+  ],
+  "playbooks": [
+    { "symptom": "The 101st user cannot connect and existing users see an unverified app warning.", "cause": "Your app requests sensitive or restricted scopes and is not verified. The 100 new user limit holds until verification.", "fix": "Submit for verification now. While you wait, nothing lifts the cap; the Internal user type is only an option for your own Workspace organization.", "claimIds": ["c11", "c12", "c13", "c17"] },
+    { "symptom": "Verification sits in review for weeks past Google's stated 10 business days.", "cause": "Google calls its durations estimates and developers in 2026 report six weeks or more, often at the privacy policy requirements stage.", "fix": "Check that the privacy policy is on the homepage's domain, that Search Console verification is complete, and reply to every Trust and Safety email the same day. Plan launches on the reported figure, not the stated one.", "waitDays": 42, "claimIds": ["c7", "c32", "c33", "c19"] },
+    { "symptom": "The verification request was rejected over scope justification.", "cause": "The justification did not tie each scope to a visible feature or a narrower scope would do.", "fix": "Rewrite the justification per scope, drop scopes you cannot defend, and show the feature in the demo video.", "claimIds": ["c23", "c21"] },
+    { "symptom": "Test users are asked to consent again every week.", "cause": "Authorizations granted to test users while the app is in Testing expire after seven days.", "fix": "Expected behaviour. Publish to production once the consent screen is complete; the 100 user cap still applies for sensitive and restricted scopes until verification.", "claimIds": ["c15", "c11"] }
+  ],
+  "artifacts": [
+    { "name": "Homepage on a verified domain", "form": "A public page on a domain you own, more than a login page", "kind": "homepage", "claimIds": ["c18"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "name": "Privacy policy on the same domain", "form": "A public page on the homepage's domain describing Google user data use", "kind": "privacy_policy", "claimIds": ["c19"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "name": "Search Console domain verification", "form": "Ownership proof for every authorized domain", "kind": "domain_verification", "claimIds": ["c20"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "name": "Demo video", "form": "A recording of the full flow including the complete consent screen", "kind": "demo_video", "claimIds": ["c21", "c22"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "name": "Scope justification", "form": "Written justification per sensitive or restricted scope in the verification form", "kind": "scope_justification", "claimIds": ["c23"], "scopeClassIds": ["sensitive", "restricted"] },
+    { "name": "CASA security assessment", "form": "A Letter of Validation from a CASA authorized assessor, renewed yearly", "kind": "security_assessment", "claimIds": ["c8", "c25"], "scopeClassIds": ["restricted"] }
+  ],
+  "gaps": [
+    { "what": "No fetched page states in so many words that apps with only non sensitive scopes skip verification, so the Open tier for that class rests on the absence of a gate rather than a quote", "page": "https://support.google.com/cloud/answer/13463817" }
+  ],
+  "verificationNote": {
+    "tested": [
+      "Discovery probe: accounts.google.com publishes a discovery document with PKCE S256.",
+      "Authorize probe: an unregistered client_id gets Error 400 at accounts.google.com/signin/oauth/error with no sign in step and no client hint."
+    ],
+    "corrected": [
+      "Removed the claim that the 100 user cap resets; Google's page says limited to 100 new users until verified and nothing more.",
+      "Official durations now carry Google's own caveat that they are estimates, with the 2026 forum reports beside them."
+    ],
+    "unverified": [
+      "The Open tier for non sensitive scopes rests on the absence of a gate in the sources, not on a quoted statement.",
+      "CASA prices are vendor reported ranges, not Google figures.",
+      "No console walkthrough with an account: consent screen steps come from the help pages."
+    ]
+  }
+}

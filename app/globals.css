@@ -1,0 +1,396 @@
+@import "tailwindcss";
+
+/* Basalt & Flare. Tokens from DESIGN.md: basalt base, chalk ink, one flare accent. */
+:root {
+  --basalt: #121110;
+  --basalt-2: #1a1918;
+  --basalt-3: #232120;
+  --basalt-4: #2f2d2b;
+  --chalk: #f2efe8;
+  --chalk-mid: #b5b0a8;
+  --chalk-faint: #85807a;
+  --hairline: rgba(255, 255, 255, 0.11);
+  --hairline-strong: rgba(255, 255, 255, 0.22);
+  --flare: #ff5c14;
+  --flare-soft: #ff9a5c;
+  --flare-deep: #d94a0b;
+  --flare-glow: rgba(255, 92, 20, 0.14);
+  --radius-sm: 4px;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+  --gutter: clamp(20px, 4.5vw, 64px);
+}
+
+@theme inline {
+  --color-basalt: var(--basalt);
+  --color-basalt-2: var(--basalt-2);
+  --color-basalt-3: var(--basalt-3);
+  --color-basalt-4: var(--basalt-4);
+  --color-chalk: var(--chalk);
+  --color-chalk-mid: var(--chalk-mid);
+  --color-chalk-faint: var(--chalk-faint);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-flare: var(--flare);
+  --color-flare-soft: var(--flare-soft);
+  --color-flare-deep: var(--flare-deep);
+  --color-flare-glow: var(--flare-glow);
+  --radius-sm: var(--radius-sm);
+  --radius-card: var(--radius-card);
+  --radius-pill: var(--radius-pill);
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+html {
+  background: var(--basalt);
+  color: var(--chalk);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  scrollbar-color: var(--basalt-4) var(--basalt);
+  caret-color: var(--chalk);
+  accent-color: var(--flare);
+}
+
+body {
+  min-height: 100vh;
+  font-feature-settings: "ss01", "cv11";
+}
+
+::selection {
+  background: var(--flare-soft);
+  color: var(--basalt);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--basalt);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--basalt-4);
+  border: 2px solid var(--basalt);
+  border-radius: 999px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--flare-soft);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+a {
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+/* Type voices */
+.t-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+  text-wrap: balance;
+}
+.t-headline {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.4vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+  text-wrap: balance;
+}
+.t-statement {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.2vw, 48px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.t-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.t-title-sm {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.t-stat {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.t-lede {
+  font-size: clamp(17px, 1.45vw, 20px);
+  line-height: 1.5;
+  color: var(--chalk-mid);
+  max-width: 68ch;
+}
+.t-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--chalk-faint);
+  line-height: 1;
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.measure {
+  max-width: 68ch;
+}
+
+/* Surfaces */
+.plate {
+  background: var(--basalt-2);
+  border-radius: var(--radius-card);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.plate-raised {
+  background: var(--basalt-3);
+  border-radius: var(--radius-card);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+}
+.ledger > * + * {
+  border-top: 1px solid var(--hairline);
+}
+
+/* Pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--radius-pill);
+  padding: 12px 20px 12px 22px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    background-color 180ms ease-out,
+    color 180ms ease-out,
+    box-shadow 180ms ease-out,
+    transform 180ms ease-out;
+}
+.pill-solid {
+  background: var(--chalk);
+  color: var(--basalt);
+}
+.pill-solid:hover {
+  background: #ffffff;
+}
+.pill-ghost {
+  background: transparent;
+  color: var(--chalk);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+}
+.pill-ghost:hover {
+  box-shadow: inset 0 0 0 1px var(--chalk-mid);
+}
+.pill-flare {
+  background: var(--flare);
+  color: var(--basalt);
+}
+.pill-flare:hover {
+  background: var(--flare-soft);
+}
+.pill:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.pill-sm {
+  padding: 8px 14px 8px 16px;
+  font-size: 13px;
+}
+.arrow::after {
+  content: "\2197";
+  display: inline-block;
+  transition: transform 180ms ease-out;
+}
+.arrow:hover::after {
+  transform: translate(2px, -2px);
+}
+
+/* Fields */
+.field {
+  background: var(--basalt-2);
+  color: var(--chalk);
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+  padding: 12px 20px;
+  font-size: 15px;
+  line-height: 1.2;
+  transition: box-shadow 180ms ease-out;
+}
+.field::placeholder {
+  color: var(--chalk-faint);
+}
+.field:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--chalk-mid);
+}
+
+/* Chips: meaning by weight and line, never by a second hue */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-sm);
+  padding: 3px 7px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+.chip-solid {
+  background: var(--chalk);
+  color: var(--basalt);
+}
+.chip-line {
+  color: var(--chalk);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
+}
+.chip-dashed {
+  color: var(--chalk-mid);
+  outline: 1px dashed var(--chalk-faint);
+  outline-offset: -1px;
+}
+.chip-faint {
+  color: var(--chalk-faint);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+.chip-flare {
+  color: var(--flare-soft);
+  box-shadow: inset 0 0 0 1px var(--flare-deep);
+}
+
+/* The survey line: the one motion signature */
+.survey {
+  position: relative;
+}
+.survey::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--flare);
+  transform-origin: left center;
+  animation: survey-draw 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.rise {
+  animation: rise 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes survey-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .survey::before,
+  .rise {
+    animation: none;
+  }
+  * {
+    transition: none !important;
+  }
+}
+
+/* Prose for the read surfaces */
+.prose-basalt p {
+  color: var(--chalk-mid);
+  max-width: 68ch;
+}
+.prose-basalt p + p {
+  margin-top: 0.8rem;
+}
+.prose-basalt strong {
+  color: var(--chalk);
+  font-weight: 600;
+}
+.prose-basalt a {
+  color: var(--flare-soft);
+}
+.prose-basalt table {
+  font-size: 14px;
+  width: 100%;
+  border-collapse: collapse;
+}
+.prose-basalt th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chalk-faint);
+  font-weight: 400;
+  padding: 10px 12px 10px 0;
+  border-bottom: 1px solid var(--hairline-strong);
+  vertical-align: bottom;
+}
+.prose-basalt td {
+  padding: 10px 12px 10px 0;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+  color: var(--chalk-mid);
+}
+.prose-basalt td:first-child {
+  color: var(--chalk);
+}
+.prose-basalt ol,
+.prose-basalt ul {
+  max-width: 68ch;
+  color: var(--chalk-mid);
+}
+.prose-basalt li + li {
+  margin-top: 0.45rem;
+}
+.prose-basalt li::marker {
+  color: var(--chalk-faint);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prose-basalt blockquote {
+  border-left: 1px solid var(--hairline-strong);
+  padding-left: 14px;
+  color: var(--chalk-mid);
+  font-style: italic;
+}
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

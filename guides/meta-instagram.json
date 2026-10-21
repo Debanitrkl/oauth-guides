@@ -1,0 +1,847 @@
+{
+  "slug": "meta-instagram",
+  "schemaVersion": 1,
+  "provider": {
+    "name": "Meta (Facebook Login and Instagram API)",
+    "domain": "facebook.com",
+    "officialDomains": [
+      "facebook.com",
+      "meta.com",
+      "instagram.com"
+    ],
+    "portalUrl": "https://developers.facebook.com/apps",
+    "docsUrl": "https://developers.facebook.com/docs/graph-api/overview/access-levels",
+    "oauthProducts": [
+      "Facebook Login",
+      "Instagram API with Facebook Login",
+      "Instagram API with Instagram Login"
+    ],
+    "variantNote": "Covers an app that serves other people's Instagram or Facebook data through the Graph API. Apps that only use your own business's data stay in Standard Access.",
+    "composioSlug": "instagram"
+  },
+  "generatedAt": "2026-10-20T15:50:00.000Z",
+  "verifiedOn": "2026-10-20",
+  "reviewState": "reviewed",
+  "review": {
+    "reviewedBy": "Deba",
+    "reviewedOn": "2026-10-20",
+    "corrections": [
+      "The first pass had Business Verification timing from a page that has since moved; the figure now comes from the vendor page it redirects to and is labelled reported.",
+      "Meta's own stated decision time for App Review (within a week) is now quoted beside the 2026 reports of 17 to 20 days rather than replaced by them."
+    ]
+  },
+  "managedAuth": {
+    "managed": true,
+    "schemes": [
+      "OAUTH2"
+    ],
+    "source": "cache",
+    "checkedAt": "2026-10-20",
+    "customAppReasons": [
+      "Your app name on the consent screen instead of Composio's",
+      "Scopes beyond Composio's defaults",
+      "A dedicated rate limit quota instead of one shared across Composio users",
+      "Polling triggers faster than the 15 minute managed floor",
+      "A self hosted or regional provider instance",
+      "Enterprise customers who require your branding end to end"
+    ]
+  },
+  "scopeClasses": [
+    {
+      "id": "basic",
+      "name": "Login only",
+      "examples": [
+        "public_profile",
+        "email"
+      ],
+      "description": "Sign in with Facebook for your own users. public_profile and email can be asked of anyone without review; the app must be in Live mode."
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced Access to user or business data",
+      "examples": [
+        "instagram_basic",
+        "instagram_content_publish",
+        "pages_read_engagement",
+        "pages_manage_posts"
+      ],
+      "description": "Serving other people's Instagram or Page data needs Advanced Access: App Review per permission plus Business Verification, and for apps serving other businesses, Tech Provider verification."
+    }
+  ],
+  "claims": [
+    {
+      "id": "c1",
+      "text": "With Standard Access a permission can only be requested from people who hold a role on the app.",
+      "kind": "tester_limit",
+      "label": "documented",
+      "sourceId": "src-1",
+      "quote": "Permissions with Standard Access can only be requested from app users who have a role on the requesting app.",
+      "scopeClassId": "advanced",
+      "value": {
+        "unit": "app role holders"
+      }
+    },
+    {
+      "id": "c2",
+      "text": "Advanced Access is approved permission by permission through App Review.",
+      "kind": "gate",
+      "label": "documented",
+      "sourceId": "src-1",
+      "quote": "Advanced Access, however, must be approved on an individual permission and feature basis",
+      "scopeClassId": "advanced",
+      "value": {
+        "gateType": "review"
+      }
+    },
+    {
+      "id": "c3",
+      "text": "Business Verification is required to get Advanced Access.",
+      "kind": "gate",
+      "label": "documented",
+      "sourceId": "src-1",
+      "quote": "However, Business Verification is required to get Advanced Access.",
+      "scopeClassId": "advanced",
+      "value": {
+        "gateType": "business_verification"
+      }
+    },
+    {
+      "id": "c4",
+      "text": "Every new app starts in Development mode.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "All newly created apps start out in Development mode"
+    },
+    {
+      "id": "c5",
+      "text": "In Development mode the app can request permissions only from people with app roles.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "Apps in Development mode can only request permissions from role users"
+    },
+    {
+      "id": "c6",
+      "text": "In Live mode the app can request permissions from anyone, but only permissions approved through App Review.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "Apps in Live mode can request permissions from anyone, but only permissions approved through App Review."
+    },
+    {
+      "id": "c7",
+      "text": "A 1024 by 1024 app icon is required for submission.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "Upload a 1024x1024 compliant app icon image to Settings > Basic > App Icon.",
+      "scopeClassId": "advanced",
+      "value": {
+        "artifact": "listing_assets"
+      }
+    },
+    {
+      "id": "c8",
+      "text": "Every requested permission needs a screen recording or it will not be approved.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "Any requested permission or feature missing a screen recording will not be approved.",
+      "scopeClassId": "advanced",
+      "value": {
+        "artifact": "demo_video"
+      }
+    },
+    {
+      "id": "c9",
+      "text": "You must make at least one successful API call with each permission you request before submitting.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "Make at least 1 successful API call using each permission for which you are requesting advanced access.",
+      "scopeClassId": "advanced",
+      "value": {
+        "artifact": "other"
+      }
+    },
+    {
+      "id": "c10",
+      "text": "Reviewers need instructions for accessing and testing the app.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "and in the space provided, describe how we can access your app in order to test it.",
+      "scopeClassId": "advanced",
+      "value": {
+        "artifact": "test_credentials"
+      }
+    },
+    {
+      "id": "c11",
+      "text": "Meta states a decision on an App Review submission within a week.",
+      "kind": "duration",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "your submission will be queued and you should receive a decision within a week.",
+      "scopeClassId": "advanced",
+      "value": {
+        "lowDays": 1,
+        "highDays": 7,
+        "stage": "App Review, Meta's statement"
+      }
+    },
+    {
+      "id": "c12",
+      "text": "Business Verification gathers information about you and your business.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-4",
+      "quote": "Business Verification is a process that allows us to gather information about you and your Business"
+    },
+    {
+      "id": "c13",
+      "text": "Advanced Access now requires Business Verification.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-4",
+      "quote": "Advanced Access now requires Business Verification.",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c14",
+      "text": "Only someone with an Admin role in the Business can complete the verification.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-4",
+      "quote": "but only someone with an Admin role in the Business will be able to complete the verification process.",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c15",
+      "text": "Since 2023 the developer platform requires Business Verification for Advanced Access.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-5",
+      "quote": "Developer Platform will now require Business Verification for Advanced Access",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c16",
+      "text": "Individual verification is no longer a path to Advanced Access, so a developer without a business stops here.",
+      "kind": "gate",
+      "label": "documented",
+      "sourceId": "src-5",
+      "quote": "individual verification will no longer be allowed for access",
+      "scopeClassId": "advanced",
+      "value": {
+        "gateType": "legal_entity"
+      }
+    },
+    {
+      "id": "c17",
+      "text": "The Instagram Platform's Advanced Access requires App Review and Business Verification.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-6",
+      "quote": "This access level requires App Review and Business Verification.",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c18",
+      "text": "Instagram API users must have an Instagram professional account.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-6",
+      "quote": "To use the APIs, your app users must have an Instagram professional account.",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c19",
+      "text": "The Instagram Platform rate limit is 4800 calls times the number of impressions per rolling 24 hours.",
+      "kind": "limit_after",
+      "label": "documented",
+      "sourceId": "src-6",
+      "quote": "Calls within 24 hours = 4800 * Number of Impressions",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c20",
+      "text": "The Data Use Checkup is an annual assessment of how you use and protect data.",
+      "kind": "limit_after",
+      "label": "documented",
+      "sourceId": "src-7",
+      "quote": "The Data Use Checkup is an annual assessment that evaluates whether a developer's continued use of and"
+    },
+    {
+      "id": "c21",
+      "text": "Completing the Data Use Checkup is tied to keeping API access.",
+      "kind": "limit_after",
+      "label": "documented",
+      "sourceId": "src-7",
+      "quote": "In order to complete DUC and maintain API access, you must:"
+    },
+    {
+      "id": "c22",
+      "text": "Tech Providers are businesses that need access to data owned by other businesses, which is what an agent serving many customers is.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-8",
+      "quote": "Tech providers are businesses that have a legitimate need to access business data owned by other businesses",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c23",
+      "text": "Once a business passes access verification, the apps it claims can be used by other businesses.",
+      "kind": "gate",
+      "label": "documented",
+      "sourceId": "src-8",
+      "quote": "If verified, any apps claimed by the business can then be used by other businesses.",
+      "scopeClassId": "advanced",
+      "value": {
+        "gateType": "business_verification"
+      }
+    },
+    {
+      "id": "c24",
+      "text": "A vendor reports Meta warning developers to expect a 20 day wait for App Review in 2026.",
+      "kind": "duration",
+      "label": "reported",
+      "sourceId": "src-9",
+      "quote": "Meta officially warns developers to expect a 20-day wait for App Reviews.",
+      "scopeClassId": "advanced",
+      "value": {
+        "lowDays": 17,
+        "highDays": 20,
+        "stage": "App Review, 2026 vendor report"
+      }
+    },
+    {
+      "id": "c25",
+      "text": "The same vendor reports 17 to 19 day reviews as routine by May 2026.",
+      "kind": "duration",
+      "label": "reported",
+      "sourceId": "src-9",
+      "quote": "17–19 days wasn't even shocking anymore.",
+      "scopeClassId": "advanced",
+      "value": {
+        "lowDays": 17,
+        "highDays": 19,
+        "stage": "App Review, May 2026 vendor report"
+      }
+    },
+    {
+      "id": "c26",
+      "text": "Earlier, the dashboard promised a 10 day turnaround.",
+      "kind": "fact",
+      "label": "reported",
+      "sourceId": "src-9",
+      "quote": "Not long ago, the dashboard promised a 10-day turnaround.",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c27",
+      "text": "A vendor reports Business Verification reviews of up to 14 business days.",
+      "kind": "duration",
+      "label": "reported",
+      "sourceId": "src-10",
+      "quote": "Meta reviews submissions within up to 14 business days.",
+      "scopeClassId": "advanced",
+      "value": {
+        "lowDays": 1,
+        "highDays": 20,
+        "stage": "Business Verification, vendor report"
+      }
+    },
+    {
+      "id": "c28",
+      "text": "Documents accepted for the legal business name include a business license, articles of incorporation and tax registration.",
+      "kind": "requirement",
+      "label": "reported",
+      "sourceId": "src-10",
+      "quote": "Examples: business license, articles of incorporation, tax registration.",
+      "scopeClassId": "advanced",
+      "value": {
+        "artifact": "business_documents"
+      }
+    },
+    {
+      "id": "c29",
+      "text": "Documents accepted for the address or phone number include a utility bill or bank statement.",
+      "kind": "requirement",
+      "label": "reported",
+      "sourceId": "src-10",
+      "quote": "Examples: utility bill, bank statement.",
+      "scopeClassId": "advanced",
+      "value": {
+        "artifact": "business_documents"
+      }
+    },
+    {
+      "id": "c30",
+      "text": "The business connection is confirmed by a code sent by text, phone call or email.",
+      "kind": "fact",
+      "label": "reported",
+      "sourceId": "src-10",
+      "quote": "Choose how to receive the code: text message, phone call, or email.",
+      "scopeClassId": "advanced"
+    },
+    {
+      "id": "c31",
+      "text": "Apps may ask any person for public_profile and email without submitting for review.",
+      "kind": "gate",
+      "label": "documented",
+      "sourceId": "src-11",
+      "quote": "Apps may ask for the following two permissions from any person without submitting for review by Facebook:",
+      "scopeClassId": "basic",
+      "value": {
+        "gateType": "none"
+      }
+    },
+    {
+      "id": "c32",
+      "text": "Any other permission needs App Review before people outside the app's roles can grant it.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-11",
+      "quote": "To ask for any other permission, your app will need to be",
+      "scopeClassId": "advanced"
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-1",
+      "url": "https://developers.facebook.com/docs/graph-api/overview/access-levels",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "Access Levels, Graph API",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-2",
+      "url": "https://developers.facebook.com/docs/development/build-and-test/app-modes",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "App Modes",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-3",
+      "url": "https://developers.facebook.com/docs/resp-plat-initiatives/individual-processes/app-review/submission-guide",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "App Review Submission Guide",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-4",
+      "url": "https://developers.facebook.com/docs/development/release/business-verification",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "Business Verification",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-5",
+      "url": "https://developers.facebook.com/blog/post/2023/02/01/developer-platform-requiring-business-verification-for-advanced-access/",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "Developer Platform Requiring Business Verification for Advanced Access",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-6",
+      "url": "https://developers.facebook.com/docs/instagram-platform/overview",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "Instagram Platform Overview",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-7",
+      "url": "https://developers.facebook.com/docs/resp-plat-initiatives/individual-processes/data-use-checkup",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "Data Use Checkup",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-8",
+      "url": "https://developers.facebook.com/docs/development/release/tech-providers",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "Tech Providers",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-9",
+      "url": "https://bundle.social/blog/meta-app-review-20-days",
+      "host": "bundle.social",
+      "official": false,
+      "title": "Meta App Review now takes 20 days (vendor blog)",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-10",
+      "url": "https://docs.360dialog.com/docs/resources/meta-business-verification/classic-business-verification.md",
+      "host": "docs.360dialog.com",
+      "official": false,
+      "title": "Classic Business Verification (360dialog docs)",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-11",
+      "url": "https://developers.facebook.com/docs/facebook-login/overview",
+      "host": "developers.facebook.com",
+      "official": true,
+      "title": "Facebook Login Overview",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    }
+  ],
+  "probes": [
+    {
+      "id": "probe-authorize",
+      "kind": "authorize",
+      "target": "https://www.facebook.com/v21.0/dialog/oauth",
+      "ok": false,
+      "summary": "Probe could not run: facebook.com disallows automated fetching of the OAuth dialog (robots).",
+      "result": {
+        "blocked": "robots"
+      },
+      "ranAt": "2026-10-20T14:55:00.000Z"
+    },
+    {
+      "id": "probe-discovery",
+      "kind": "discovery",
+      "target": "https://www.facebook.com/.well-known/openid-configuration",
+      "ok": false,
+      "summary": "Probe could not run: facebook.com disallows automated fetching of the discovery path (robots).",
+      "result": {
+        "blocked": "robots"
+      },
+      "ranAt": "2026-10-20T14:55:00.000Z"
+    }
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "title": "Confirm you have a registered business with an admin who can verify it",
+      "detail": "Advanced Access requires Business Verification and individual verification is no longer allowed. Without a business entity, stop here or stay with login only.",
+      "owner": "only_you",
+      "inputs": [
+        "Legal business name, address, registration or tax documents"
+      ],
+      "url": "https://developers.facebook.com/docs/development/release/business-verification",
+      "claimIds": [
+        "c3",
+        "c13",
+        "c14",
+        "c16"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Sign in to the App Dashboard and create the app, choosing the Instagram or Facebook Login use case and connecting your business portfolio",
+      "owner": "only_you",
+      "inputs": [
+        "A Facebook account with a business portfolio"
+      ],
+      "url": "https://developers.facebook.com/apps",
+      "claimIds": [
+        "c4"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Build and test in Development mode with people who hold roles on the app",
+      "detail": "Only role holders can grant permissions until the app is Live and the permissions are approved.",
+      "owner": "agent",
+      "inputs": [
+        "Tester, developer or admin roles for your team"
+      ],
+      "claimIds": [
+        "c5",
+        "c1"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Set the redirect URI, privacy policy URL, data deletion callback and the 1024 by 1024 app icon in Settings",
+      "owner": "agent",
+      "inputs": [
+        "Redirect URI from your auth config",
+        "Privacy policy URL",
+        "Data deletion callback or instructions URL",
+        "App icon"
+      ],
+      "claimIds": [
+        "c7"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "For login only: switch the app to Live mode. public_profile and email need no review",
+      "owner": "agent",
+      "inputs": [],
+      "claimIds": [
+        "c6",
+        "c31"
+      ],
+      "scopeClassIds": [
+        "basic"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Make at least one successful API call with every permission you will request",
+      "owner": "agent",
+      "inputs": [
+        "A test Instagram professional account or Page"
+      ],
+      "url": "https://developers.facebook.com/docs/resp-plat-initiatives/individual-processes/app-review/submission-guide",
+      "claimIds": [
+        "c9",
+        "c18"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Record a screen recording per permission showing the grant and the use, and write the use case text and reviewer access instructions",
+      "detail": "A permission without a recording is not approved.",
+      "owner": "agent_prepares",
+      "inputs": [
+        "Screen recordings per permission",
+        "Use case description per permission",
+        "Reviewer test instructions and credentials"
+      ],
+      "claimIds": [
+        "c8",
+        "c10"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Complete Business Verification as a Business admin: upload documents and confirm by text, call or email",
+      "detail": "Vendors report reviews of up to 14 business days. Meta publishes no duration.",
+      "owner": "only_you",
+      "inputs": [
+        "Business license, articles of incorporation or tax registration",
+        "Utility bill or bank statement",
+        "Phone or email on the business"
+      ],
+      "claimIds": [
+        "c12",
+        "c14",
+        "c27",
+        "c28",
+        "c29",
+        "c30"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "Submit App Review for each permission and plan on the reported wait",
+      "detail": "Meta states a decision within a week. Vendors report 17 to 20 days in 2026.",
+      "owner": "only_you",
+      "inputs": [
+        "Completed submission"
+      ],
+      "claimIds": [
+        "c2",
+        "c11",
+        "c24",
+        "c25",
+        "c26"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "n": 10,
+      "title": "If your app serves other businesses, complete Tech Provider access verification",
+      "owner": "only_you",
+      "inputs": [
+        "Business portfolio that claims the app"
+      ],
+      "url": "https://developers.facebook.com/docs/development/release/tech-providers",
+      "claimIds": [
+        "c22",
+        "c23"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "n": 11,
+      "title": "Switch to Live mode, watch the Instagram rate limit, and calendar the annual Data Use Checkup",
+      "detail": "Missing the Data Use Checkup costs API access.",
+      "owner": "agent",
+      "inputs": [],
+      "claimIds": [
+        "c6",
+        "c19",
+        "c20",
+        "c21"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    }
+  ],
+  "playbooks": [
+    {
+      "symptom": "Users outside your team cannot grant the Instagram permissions.",
+      "cause": "The app is in Development mode or the permissions only have Standard Access, which works for role holders alone.",
+      "fix": "Get Advanced Access through App Review and Business Verification, then switch to Live mode.",
+      "claimIds": [
+        "c1",
+        "c5",
+        "c2",
+        "c6"
+      ]
+    },
+    {
+      "symptom": "The App Review submission was rejected with no approval for one permission.",
+      "cause": "A missing screen recording, no successful API call with that permission, or reviewers could not access the app.",
+      "fix": "Add a recording for every permission, make the API calls, and give reviewer credentials with step by step instructions. Resubmit.",
+      "waitDays": 20,
+      "claimIds": [
+        "c8",
+        "c9",
+        "c10",
+        "c24"
+      ]
+    },
+    {
+      "symptom": "Business Verification is stuck or rejected.",
+      "cause": "Documents that do not match the legal name and address, or no Business admin completing the flow.",
+      "fix": "Have a Business admin resubmit matching documents and confirm the code by text, call or email. Vendors report up to 14 business days.",
+      "waitDays": 20,
+      "claimIds": [
+        "c14",
+        "c27",
+        "c28",
+        "c29",
+        "c30"
+      ]
+    },
+    {
+      "symptom": "You are a solo developer and the dashboard will not grant Advanced Access.",
+      "cause": "Individual verification is no longer a path; Advanced Access needs a verified business.",
+      "fix": "Register a business entity or stay with login only permissions. There is no third option on this platform.",
+      "claimIds": [
+        "c16",
+        "c3"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "Business documents",
+      "form": "Business license, articles of incorporation or tax registration, plus a utility bill or bank statement matching the legal name and address",
+      "kind": "business_documents",
+      "claimIds": [
+        "c28",
+        "c29"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "Screen recording per permission",
+      "form": "A recording showing the permission being granted and used",
+      "kind": "demo_video",
+      "claimIds": [
+        "c8"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "Reviewer access instructions and credentials",
+      "form": "Step by step instructions and a test login in the submission",
+      "kind": "test_credentials",
+      "claimIds": [
+        "c10"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "App icon",
+      "form": "A 1024 by 1024 image without Meta trademarks",
+      "kind": "listing_assets",
+      "claimIds": [
+        "c7"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "One successful API call per permission",
+      "form": "Logged calls made before submission",
+      "kind": "other",
+      "claimIds": [
+        "c9"
+      ],
+      "scopeClassIds": [
+        "advanced"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "what": "Both probes could not run because facebook.com disallows automated fetching, so nothing here is Tested",
+      "page": "https://www.facebook.com/v21.0/dialog/oauth"
+    },
+    {
+      "what": "Meta publishes no duration for Business Verification; the figure is a vendor report",
+      "page": "https://developers.facebook.com/docs/development/release/business-verification"
+    },
+    {
+      "what": "The privacy policy URL and data deletion callback requirements are listed in the steps from the submission guide but the fetched excerpt did not include a quotable sentence for them, so they carry no claim",
+      "page": "https://developers.facebook.com/docs/resp-plat-initiatives/individual-processes/app-review/submission-guide"
+    }
+  ],
+  "verificationNote": {
+    "tested": [],
+    "corrected": [
+      "Business Verification timing now cites the vendor page the old URL redirects to and is labelled reported.",
+      "Meta's stated App Review time (within a week) is quoted beside the 2026 reports instead of being dropped."
+    ],
+    "unverified": [
+      "Nothing in this guide is Tested: facebook.com blocks automated fetching of the OAuth dialog and the discovery path, and no account walkthrough was recorded.",
+      "Business Verification duration rests on a vendor page, not on Meta.",
+      "The privacy policy URL and data deletion callback requirements appear in the steps without a quoted claim."
+    ]
+  }
+}

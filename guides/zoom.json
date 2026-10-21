@@ -1,0 +1,701 @@
+{
+  "slug": "zoom",
+  "schemaVersion": 1,
+  "provider": {
+    "name": "Zoom",
+    "domain": "zoom.us",
+    "officialDomains": [
+      "zoom.us",
+      "developers.zoom.us"
+    ],
+    "portalUrl": "https://marketplace.zoom.us/user/build",
+    "docsUrl": "https://developers.zoom.us/docs/build-flow/publish/",
+    "oauthProducts": [
+      "General app (user managed or account level OAuth)"
+    ],
+    "composioSlug": "zoom"
+  },
+  "generatedAt": "2026-10-20T15:40:00.000Z",
+  "verifiedOn": "2026-10-20",
+  "reviewState": "reviewed",
+  "review": {
+    "reviewedBy": "Deba",
+    "reviewedOn": "2026-10-20",
+    "corrections": [
+      "The first pass put the beta sharing caps at 10 and 100 users; the page says additions for a private account level app and a private user level app, which the guide now repeats exactly.",
+      "The publish page does not mention unlisted apps; the claim that unlisted apps still go through review comes from the rejection issues page and is phrased from it."
+    ]
+  },
+  "managedAuth": {
+    "managed": true,
+    "schemes": [
+      "OAUTH2"
+    ],
+    "source": "cache",
+    "checkedAt": "2026-10-20",
+    "customAppReasons": [
+      "Your app name on the consent screen instead of Composio's",
+      "Scopes beyond Composio's defaults",
+      "A dedicated rate limit quota instead of one shared across Composio users",
+      "Polling triggers faster than the 15 minute managed floor",
+      "A self hosted or regional provider instance",
+      "Enterprise customers who require your branding end to end"
+    ]
+  },
+  "scopeClasses": [
+    {
+      "id": "default",
+      "name": "All scopes",
+      "examples": [
+        "meeting:read",
+        "meeting:write",
+        "user:read",
+        "recording:read"
+      ],
+      "description": "The gate does not depend on scopes. Any app for external Zoom users must pass Marketplace review; before that, a beta share link reaches a small number of users."
+    }
+  ],
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Publishing starts with choosing the audience: users within your own Zoom account, or external Zoom users.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-1",
+      "quote": "If you choose to publish your app, select the intended audience."
+    },
+    {
+      "id": "c2",
+      "text": "External Zoom users can install the app from the Marketplace only after it passes Zoom's review.",
+      "kind": "gate",
+      "label": "documented",
+      "sourceId": "src-1",
+      "quote": "after it passes Zoom's review process.",
+      "value": {
+        "gateType": "review"
+      }
+    },
+    {
+      "id": "c3",
+      "text": "Apps for users within your own account are for internal use and skip the standard Marketplace review.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-1",
+      "quote": "These apps are intended for internal use and don't require the standard Marketplace review."
+    },
+    {
+      "id": "c4",
+      "text": "To share the authorization URL with users outside your developer account before review, you select Request to Share.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "To share the authorization URL with users outside of your developer account, select Request to Share."
+    },
+    {
+      "id": "c5",
+      "text": "Zoom's app review team answers a beta share request within 3 to 4 business days. This is the beta link, not the full review.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "A member of the Zoom app review team responds to your request no longer than 3-4 business days."
+    },
+    {
+      "id": "c6",
+      "text": "A share request needs supporting evidence of your app's security practices.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "Provided supporting evidence of your app's security practices.",
+      "value": {
+        "artifact": "security_questionnaire"
+      }
+    },
+    {
+      "id": "c7",
+      "text": "The Technical Design section must be complete before a share request is approved.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "All required information in the Technical Design section.",
+      "value": {
+        "artifact": "other"
+      }
+    },
+    {
+      "id": "c8",
+      "text": "An approved authorization URL may be shared for 4 weeks.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "Once approved, an authorization URL is permitted to be shared for a standard duration of 4 weeks."
+    },
+    {
+      "id": "c9",
+      "text": "A private account level app can be added at most 10 times during sharing.",
+      "kind": "tester_limit",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "The maximum number of additions for a private account-level application is 10.",
+      "value": {
+        "limit": 10,
+        "unit": "account level additions"
+      }
+    },
+    {
+      "id": "c10",
+      "text": "A private user level app can be added at most 100 times during sharing.",
+      "kind": "tester_limit",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "The maximum number of additions for a private user-level application is 100.",
+      "value": {
+        "limit": 100,
+        "unit": "user level additions"
+      }
+    },
+    {
+      "id": "c11",
+      "text": "During beta sharing you may not make any information about the app public.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-2",
+      "quote": "Making any information about your app public."
+    },
+    {
+      "id": "c12",
+      "text": "You must validate the domains your app's URLs live on before submission.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "Validate your app domains.",
+      "value": {
+        "artifact": "domain_verification"
+      }
+    },
+    {
+      "id": "c13",
+      "text": "Reviewers need test credentials that let them use the whole integration.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "provide test credentials that allow Zoom reviewers to fully experience your integration.",
+      "value": {
+        "artifact": "test_credentials"
+      }
+    },
+    {
+      "id": "c14",
+      "text": "A test plan goes in the release notes so reviewers can start functional testing.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "include a test plan, so that reviewers have everything they need to begin functional testing",
+      "value": {
+        "artifact": "other"
+      }
+    },
+    {
+      "id": "c15",
+      "text": "A first submission must authorize with the Production client ID.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-3",
+      "quote": "Make sure your environment is using the Production Client ID during authorization."
+    },
+    {
+      "id": "c16",
+      "text": "Every app goes through functionality, usability and compliance review.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-4",
+      "quote": "All apps undergo functionality, usability and compliance review"
+    },
+    {
+      "id": "c17",
+      "text": "Compliance review happens before security testing.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-4",
+      "quote": "Compliance review is done before security testing."
+    },
+    {
+      "id": "c18",
+      "text": "Zoom publishes no fixed review duration; it varies with the app's quality, usability and features.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-4",
+      "quote": "An app's review time varies based on app quality, usability, quantity and function of features"
+    },
+    {
+      "id": "c19",
+      "text": "Apps with properly defined scopes get through testing fastest.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-4",
+      "quote": "Testing time is typically the shortest for apps that have properly defined scopes"
+    },
+    {
+      "id": "c20",
+      "text": "A test plan is required for every submission, including resubmissions; missing it is a stated rejection reason.",
+      "kind": "rejection_reason",
+      "label": "documented",
+      "sourceId": "src-5",
+      "quote": "A test plan is required for each submission, including re-submissions."
+    },
+    {
+      "id": "c21",
+      "text": "Submitting with the wrong client ID is a stated rejection reason.",
+      "kind": "rejection_reason",
+      "label": "documented",
+      "sourceId": "src-5",
+      "quote": "It is important that you use the correct client ID when submitting your app for review."
+    },
+    {
+      "id": "c22",
+      "text": "Terms of Use, Support, Privacy Policy and Documentation URLs must be on fully qualified domains your company owns.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-5",
+      "quote": "must be hosted on fully qualified domain names (FQDNs) owned by your company.",
+      "value": {
+        "artifact": "terms_of_service"
+      }
+    },
+    {
+      "id": "c23",
+      "text": "Hosting those documents on Google Drive or Dropbox is not permitted.",
+      "kind": "rejection_reason",
+      "label": "documented",
+      "sourceId": "src-5",
+      "quote": "Hosting these documents on third-party platforms like Google Drive or Dropbox is not permitted."
+    },
+    {
+      "id": "c24",
+      "text": "The app must handle Zoom's deauthorization event notification.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-5",
+      "quote": "Handle Zoom's Deauthorization Event Notification",
+      "value": {
+        "artifact": "other"
+      }
+    },
+    {
+      "id": "c25",
+      "text": "Each requested scope needs a justification and detailed testing instructions.",
+      "kind": "requirement",
+      "label": "documented",
+      "sourceId": "src-5",
+      "quote": "Developers must provide justification and detailed testing instructions for each requested scope.",
+      "value": {
+        "artifact": "scope_justification"
+      }
+    },
+    {
+      "id": "c26",
+      "text": "Creating an app requires being the account owner, an admin, or holding the Zoom for developers role.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-6",
+      "quote": "You are either the Zoom account owner, account admin, or have been assigned the Zoom for developers role."
+    },
+    {
+      "id": "c27",
+      "text": "Apps are created from the Marketplace's Develop menu, Build an app.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-6",
+      "quote": "On the Created apps page, click Develop and select Build an app."
+    },
+    {
+      "id": "c28",
+      "text": "After the 4 week beta period you can request two more 4 week extensions.",
+      "kind": "fact",
+      "label": "documented",
+      "sourceId": "src-7",
+      "quote": "after which you can request two additional 4-week extensions."
+    },
+    {
+      "id": "c29",
+      "text": "Zoom staff state a 72 hour SLA for every submission, with the security review taking up to two weeks in the same reply.",
+      "kind": "duration",
+      "label": "reported",
+      "sourceId": "src-8",
+      "quote": "We have a 72-hour SLA for every submission.",
+      "value": {
+        "lowDays": 3,
+        "highDays": 14,
+        "stage": "Marketplace review, staff reply on the developer forum"
+      }
+    },
+    {
+      "id": "c30",
+      "text": "zoom.us publishes an OpenID discovery document with the authorize endpoint https://zoom.us/oauth/authorize and the token endpoint https://zoom.us/oauth/token, listing three scopes.",
+      "kind": "fact",
+      "label": "tested",
+      "probeId": "probe-discovery"
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-1",
+      "url": "https://developers.zoom.us/docs/build-flow/publish/",
+      "host": "developers.zoom.us",
+      "official": true,
+      "title": "Publish, Build Flow",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-2",
+      "url": "https://developers.zoom.us/docs/distribute/sharing-private-and-beta-apps/",
+      "host": "developers.zoom.us",
+      "official": true,
+      "title": "Sharing private and beta apps",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-3",
+      "url": "https://developers.zoom.us/docs/distribute/app-submission/submit-apps-review/",
+      "host": "developers.zoom.us",
+      "official": true,
+      "title": "Submit apps for review",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-4",
+      "url": "https://developers.zoom.us/docs/distribute/app-review-process/",
+      "host": "developers.zoom.us",
+      "official": true,
+      "title": "App review process",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-5",
+      "url": "https://developers.zoom.us/docs/distribute/app-submission/common-rejection-issues/",
+      "host": "developers.zoom.us",
+      "official": true,
+      "title": "Common reasons for app submission rejection",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-6",
+      "url": "https://developers.zoom.us/docs/integrations/create/",
+      "host": "developers.zoom.us",
+      "official": true,
+      "title": "Create an OAuth app",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-7",
+      "url": "https://developers.zoom.us/docs/distribute/app-submission/authorization-url-faq/",
+      "host": "developers.zoom.us",
+      "official": true,
+      "title": "Authorization URL FAQ",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    },
+    {
+      "id": "src-8",
+      "url": "https://devforum.zoom.us/t/zoom-app-marketplace-review-process/121554",
+      "host": "devforum.zoom.us",
+      "official": false,
+      "title": "Zoom App Marketplace review process (developer forum)",
+      "retrievedAt": "2026-10-20",
+      "status": "hand_checked"
+    }
+  ],
+  "probes": [
+    {
+      "id": "probe-discovery",
+      "kind": "discovery",
+      "target": "https://zoom.us/.well-known/openid-configuration",
+      "ok": true,
+      "summary": "Discovery document found: authorize https://zoom.us/oauth/authorize, token https://zoom.us/oauth/token, 3 scopes listed.",
+      "result": {
+        "authorization_endpoint": "https://zoom.us/oauth/authorize",
+        "token_endpoint": "https://zoom.us/oauth/token",
+        "scopes_supported": [
+          "openid",
+          "email",
+          "profile"
+        ],
+        "method": "fetch tool, 2026-10-20"
+      },
+      "ranAt": "2026-10-20T14:55:00.000Z"
+    },
+    {
+      "id": "probe-authorize",
+      "kind": "authorize",
+      "target": "https://zoom.us/oauth/authorize",
+      "ok": false,
+      "summary": "Probe could not run: zoom.us disallows automated fetching of the authorize endpoint (robots).",
+      "result": {
+        "blocked": "robots"
+      },
+      "ranAt": "2026-10-20T14:55:00.000Z"
+    }
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "title": "Sign in to the Zoom App Marketplace as the account owner, an admin, or a user with the Zoom for developers role",
+      "owner": "only_you",
+      "inputs": [
+        "A Zoom account with one of those roles"
+      ],
+      "url": "https://marketplace.zoom.us/user/build",
+      "claimIds": [
+        "c26"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Create a General app from Develop, Build an app, and set the OAuth redirect URL and scopes",
+      "owner": "agent",
+      "inputs": [
+        "App name",
+        "Redirect URL from your auth config",
+        "Scope list with a justification per scope"
+      ],
+      "url": "https://developers.zoom.us/docs/integrations/create/",
+      "claimIds": [
+        "c27",
+        "c25"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Host Terms of Use, Privacy Policy, Support and Documentation pages on domains your company owns, then validate those domains",
+      "detail": "Google Drive or Dropbox links are a stated rejection reason.",
+      "owner": "agent",
+      "inputs": [
+        "Four public URLs on your own domain",
+        "DNS access for validation"
+      ],
+      "url": "https://developers.zoom.us/docs/distribute/app-submission/common-rejection-issues/",
+      "claimIds": [
+        "c22",
+        "c23",
+        "c12"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Implement the deauthorization event handler",
+      "owner": "agent",
+      "inputs": [
+        "A webhook endpoint for the deauthorization event"
+      ],
+      "claimIds": [
+        "c24"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Complete the Technical Design section and gather evidence of your security practices",
+      "detail": "Both are checked before a beta share request is approved. A short security document (SDLC, scanning, pen test if any) is what the review team reads.",
+      "owner": "agent_prepares",
+      "inputs": [
+        "Architecture and data flow",
+        "Security practices summary"
+      ],
+      "url": "https://developers.zoom.us/docs/distribute/sharing-private-and-beta-apps/",
+      "claimIds": [
+        "c6",
+        "c7"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Request to Share for a beta link to users outside your account",
+      "detail": "Zoom answers within 3 to 4 business days. The link lasts 4 weeks with two 4 week extensions, caps at 10 additions for an account level app or 100 for a user level app, and nothing about the app may be made public meanwhile.",
+      "owner": "only_you",
+      "inputs": [
+        "Completed Technical Design and security evidence"
+      ],
+      "claimIds": [
+        "c4",
+        "c5",
+        "c8",
+        "c9",
+        "c10",
+        "c11",
+        "c28"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Write the test plan and prepare reviewer test credentials",
+      "detail": "Required on every submission, including resubmissions. Credentials must let reviewers use the whole integration.",
+      "owner": "agent_prepares",
+      "inputs": [
+        "Step by step test plan",
+        "A reviewer account with credentials"
+      ],
+      "url": "https://developers.zoom.us/docs/distribute/app-submission/submit-apps-review/",
+      "claimIds": [
+        "c13",
+        "c14",
+        "c20"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Submit for Marketplace review using the Production client ID",
+      "detail": "Zoom publishes no fixed duration. Staff cite a 72 hour SLA per submission with security review up to two weeks; the review covers functionality, usability and compliance, then security.",
+      "owner": "only_you",
+      "inputs": [
+        "Completed listing and test plan"
+      ],
+      "claimIds": [
+        "c2",
+        "c15",
+        "c16",
+        "c17",
+        "c18",
+        "c29"
+      ]
+    }
+  ],
+  "playbooks": [
+    {
+      "symptom": "A customer outside your account gets an error when opening your authorization URL.",
+      "cause": "Apps for external users must pass Marketplace review, and before that the URL can be shared only through an approved beta share request.",
+      "fix": "File a Request to Share with the Technical Design complete and security evidence attached. Expect an answer in 3 to 4 business days and a 4 week window.",
+      "waitDays": 5,
+      "claimIds": [
+        "c2",
+        "c4",
+        "c5",
+        "c8"
+      ]
+    },
+    {
+      "symptom": "The beta link stopped working after a month or after a few installs.",
+      "cause": "Share approvals last 4 weeks and cap at 10 account level or 100 user level additions.",
+      "fix": "Request one of the two 4 week extensions, or submit for the full review if you are at the cap.",
+      "claimIds": [
+        "c8",
+        "c9",
+        "c10",
+        "c28"
+      ]
+    },
+    {
+      "symptom": "The submission was rejected for a missing test plan or the wrong client ID.",
+      "cause": "Both are stated rejection reasons; a test plan is required on every submission and a first submission must use the Production client ID.",
+      "fix": "Add the test plan to the release notes, confirm the client ID, and resubmit.",
+      "claimIds": [
+        "c20",
+        "c21",
+        "c15"
+      ]
+    },
+    {
+      "symptom": "Rejected over the URLs on the listing.",
+      "cause": "Terms, support, privacy policy and documentation pages must live on domains your company owns; file sharing links are refused.",
+      "fix": "Move the pages to your own domain and validate the domain in the Publish section.",
+      "claimIds": [
+        "c22",
+        "c23",
+        "c12"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "Terms of Use, Privacy Policy, Support and Documentation pages",
+      "form": "Public pages on fully qualified domains your company owns",
+      "kind": "terms_of_service",
+      "claimIds": [
+        "c22"
+      ]
+    },
+    {
+      "name": "Domain validation",
+      "form": "Validated domains for every app URL, done in the Publish section",
+      "kind": "domain_verification",
+      "claimIds": [
+        "c12"
+      ]
+    },
+    {
+      "name": "Technical Design section",
+      "form": "Architecture, data flow and security fields in the app settings",
+      "kind": "other",
+      "claimIds": [
+        "c7"
+      ]
+    },
+    {
+      "name": "Security practices evidence",
+      "form": "A document the review team reads before approving a beta share",
+      "kind": "security_questionnaire",
+      "claimIds": [
+        "c6"
+      ]
+    },
+    {
+      "name": "Test plan",
+      "form": "Step by step instructions in the release notes, on every submission",
+      "kind": "other",
+      "claimIds": [
+        "c14",
+        "c20"
+      ]
+    },
+    {
+      "name": "Reviewer test credentials",
+      "form": "An account that lets reviewers use the whole integration",
+      "kind": "test_credentials",
+      "claimIds": [
+        "c13"
+      ]
+    },
+    {
+      "name": "Scope justifications",
+      "form": "A justification and testing instructions per requested scope",
+      "kind": "scope_justification",
+      "claimIds": [
+        "c25"
+      ]
+    },
+    {
+      "name": "Deauthorization handler",
+      "form": "A webhook endpoint that handles Zoom's deauthorization event",
+      "kind": "other",
+      "claimIds": [
+        "c24"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "what": "Zoom publishes no review duration, so the wait range rests on a staff forum reply and the beta share figure",
+      "page": "https://developers.zoom.us/docs/distribute/app-review-process/"
+    },
+    {
+      "what": "The authorize endpoint probe could not run because zoom.us disallows automated fetching",
+      "page": "https://zoom.us/oauth/authorize"
+    }
+  ],
+  "verificationNote": {
+    "tested": [
+      "Discovery probe: zoom.us publishes an OpenID discovery document with the authorize and token endpoints."
+    ],
+    "corrected": [
+      "Beta sharing caps are per application kind (10 account level, 100 user level additions), not per user as first written.",
+      "The claim that unlisted apps go through review is attributed to the rejection issues page; the publish page does not mention unlisted apps."
+    ],
+    "unverified": [
+      "The full Marketplace review duration: Zoom states only that it varies. The 72 hour and two week figures come from a staff forum reply and developers report longer waits in the same thread.",
+      "No app creation walkthrough with an account."
+    ]
+  }
+}

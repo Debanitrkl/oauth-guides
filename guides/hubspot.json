@@ -1,0 +1,125 @@
+{
+  "slug": "hubspot",
+  "schemaVersion": 1,
+  "provider": {
+    "name": "HubSpot",
+    "domain": "hubspot.com",
+    "officialDomains": ["hubspot.com"],
+    "portalUrl": "https://app.hubspot.com/developer",
+    "docsUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app",
+    "oauthProducts": ["Projects based app with marketplace distribution", "Projects based app with private distribution"],
+    "variantNote": "Covers the projects based developer platform (version 2025.2). Legacy public app creation closed for all accounts on 23 June 2026.",
+    "composioSlug": "hubspot"
+  },
+  "generatedAt": "2026-10-20T15:20:00.000Z",
+  "verifiedOn": "2026-10-20",
+  "reviewState": "reviewed",
+  "review": {
+    "reviewedBy": "Deba",
+    "reviewedOn": "2026-10-20",
+    "corrections": [
+      "The first pass described HubSpot as Open. The 22 September 2025 changelog caps unlisted marketplace distribution apps at 25 installs, which makes it Capped.",
+      "The legacy public app model the first pass referred to is closed; apps are created as projects with the CLI."
+    ]
+  },
+  "managedAuth": {
+    "managed": true,
+    "schemes": ["OAUTH2", "API_KEY"],
+    "source": "cache",
+    "checkedAt": "2026-10-20",
+    "customAppReasons": [
+      "Your app name on the consent screen instead of Composio's",
+      "Scopes beyond Composio's defaults",
+      "A dedicated rate limit quota instead of one shared across Composio users",
+      "Polling triggers faster than the 15 minute managed floor",
+      "A self hosted or regional provider instance",
+      "Enterprise customers who require your branding end to end"
+    ]
+  },
+  "scopeClasses": [
+    {
+      "id": "default",
+      "name": "All scopes",
+      "examples": ["crm.objects.contacts.read", "crm.objects.deals.write", "tickets"],
+      "description": "The cap does not depend on scopes. Any account can install an unlisted app, up to 25 installs, until the app is listed on the Marketplace."
+    }
+  ],
+  "claims": [
+    { "id": "c1", "text": "Unlisted apps with marketplace distribution are capped at 25 installs until they are listed on the HubSpot Marketplace.", "kind": "cap", "label": "documented", "sourceId": "src-1", "quote": "are capped at 25 installs until they are listed on the HubSpot Marketplace", "value": { "limit": 25, "unit": "installs", "liftedBy": "Marketplace listing" } },
+    { "id": "c2", "text": "The 25 install cap took effect on 22 September 2025 for apps created on or migrated to version 2025.2.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "Starting on September 22nd, 2025, apps that are created or migrated to version 2025.2" },
+    { "id": "c3", "text": "Private distribution apps can be installed on up to 10 accounts, or 100 for Solutions Partners.", "kind": "tester_limit", "label": "documented", "sourceId": "src-1", "quote": "to up to 10 customers or 100 for Solution Partners.", "value": { "limit": 10, "unit": "accounts" } },
+    { "id": "c4", "text": "Static auth token private apps work on a single account.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "static auth private apps remain capped at a single standard portal regardless of partner status." },
+    { "id": "c5", "text": "A Marketplace listing removes the 25 install cap.", "kind": "fact", "label": "documented", "sourceId": "src-1", "quote": "Submit your app for a Marketplace listing, which removes the 25‑install cap on marketplace distribution" },
+    { "id": "c6", "text": "Unreviewed apps show a banner on the install screen saying HubSpot has not reviewed or approved them.", "kind": "fact", "label": "documented", "sourceId": "src-2", "quote": "a banner to indicate that the app hasn't been reviewed or explicitly approved by HubSpot" },
+    { "id": "c7", "text": "Without a verified domain, users must type I accept the risk before they can connect an unlisted app.", "kind": "fact", "label": "documented", "sourceId": "src-2", "quote": "Then type I accept the risk, and click Connect to authorize the app." },
+    { "id": "c8", "text": "Listed apps do not need domain verification and show no warning banner.", "kind": "fact", "label": "documented", "sourceId": "src-2", "quote": "You are not required to verify the domain if your app has been listed on the HubSpot Marketplace" },
+    { "id": "c9", "text": "Domain verification is set up from the developer account overview page.", "kind": "requirement", "label": "documented", "sourceId": "src-2", "quote": "To add a verified domain for your apps, add the domain within the developer overview page", "value": { "artifact": "domain_verification" } },
+    { "id": "c10", "text": "Apps are created as projects with the CLI command hs project create.", "kind": "fact", "label": "documented", "sourceId": "src-3", "quote": "deploy a new app using the hs project create command." },
+    { "id": "c11", "text": "Distribution is a choice between a set of allowlisted accounts and the HubSpot App Marketplace.", "kind": "permanent_choice", "label": "documented", "sourceId": "src-3", "quote": "either with a specific set of allowlisted accounts or via the HubSpot app marketplace" },
+    { "id": "c12", "text": "Projects are managed from a developer account.", "kind": "fact", "label": "documented", "sourceId": "src-3", "quote": "view your project status and source code within your primary developer account" },
+    { "id": "c13", "text": "A Marketplace listing requires at least three active, unique installs.", "kind": "fact", "label": "documented", "sourceId": "src-4", "quote": "Installs: your app must have at least three active, unique installs." },
+    { "id": "c14", "text": "Active installs are counted on production accounts not affiliated with your organization.", "kind": "fact", "label": "documented", "sourceId": "src-4", "quote": "Active installs are the number of unique HubSpot production accounts, unaffiliated with your organization" },
+    { "id": "c15", "text": "A listed app must use OAuth as its only authorization method.", "kind": "fact", "label": "documented", "sourceId": "src-4", "quote": "your app must use OAuth as its sole authorization method." },
+    { "id": "c16", "text": "HubSpot's Ecosystem Quality team completes an initial listing review within 10 business days.", "kind": "duration", "label": "documented", "sourceId": "src-4", "quote": "the HubSpot Ecosystem Quality team will complete an initial review within 10 business days.", "value": { "lowDays": 1, "highDays": 14, "stage": "Marketplace listing, initial review" } },
+    { "id": "c17", "text": "The whole listing review should take no more than 60 days from the time feedback is shared.", "kind": "duration", "label": "documented", "sourceId": "src-4", "quote": "should take no more than 60 days from the time feedback is shared.", "value": { "lowDays": 14, "highDays": 60, "stage": "Marketplace listing, full process" } },
+    { "id": "c18", "text": "Listings that miss the minimum requirements are rejected.", "kind": "rejection_reason", "label": "documented", "sourceId": "src-4", "quote": "will be rejected if they do not meet the criteria outlined below." },
+    { "id": "c19", "text": "Each account that installs an OAuth app is limited to 110 requests every 10 seconds.", "kind": "limit_after", "label": "documented", "sourceId": "src-5", "quote": "For OAuth apps, each HubSpot account that installs your app is limited to 110 requests every 10 seconds." },
+    { "id": "c20", "text": "Legacy public app creation was switched off for new accounts from 26 May 2026.", "kind": "fact", "label": "documented", "sourceId": "src-6", "quote": "Beginning May 26, 2026, the ability to create new legacy public apps via the Developer Platform UI" },
+    { "id": "c21", "text": "Legacy public app creation closed for all remaining accounts on 23 June 2026.", "kind": "fact", "label": "documented", "sourceId": "src-6", "quote": "June 23, 2026: Legacy public app creation is disabled for all accounts created before May 26, 2026." },
+    { "id": "c22", "text": "New Marketplace apps must be built on the projects based platform.", "kind": "fact", "label": "documented", "sourceId": "src-6", "quote": "If you are building a new app intended for the Marketplace, begin using the Projects-based platform now." },
+    { "id": "c23", "text": "HubSpot staff say there are no manual exceptions or temporary increases to the install limit.", "kind": "fact", "label": "reported", "sourceId": "src-7", "quote": "we do not grant manual exceptions or temporary increases." },
+    { "id": "c24", "text": "HubSpot staff say most listing submissions are reviewed within 10 business days.", "kind": "duration", "label": "reported", "sourceId": "src-7", "quote": "the team is able to review most app listing submissions within 10 business days.", "value": { "lowDays": 5, "highDays": 14, "stage": "Marketplace listing review, staff report May 2026" } }
+  ],
+  "sources": [
+    { "id": "src-1", "url": "https://developers.hubspot.com/changelog/new-marketplace-distribution-app-install-limits", "host": "developers.hubspot.com", "official": true, "title": "New Marketplace Distribution App Install Limits", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-2", "url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/manage-apps-in-hubspot", "host": "developers.hubspot.com", "official": true, "title": "Manage apps in HubSpot", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-3", "url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app", "host": "developers.hubspot.com", "official": true, "title": "Create a new app using the CLI", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-4", "url": "https://developers.hubspot.com/docs/apps/developer-platform/list-apps/listing-your-app/app-marketplace-listing-requirements", "host": "developers.hubspot.com", "official": true, "title": "App listing requirements in the HubSpot Marketplace", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-5", "url": "https://developers.hubspot.com/docs/guides/apps/api-usage/usage-details", "host": "developers.hubspot.com", "official": true, "title": "Usage details", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-6", "url": "https://developers.hubspot.com/changelog/legacy-public-app-creation-sunset", "host": "developers.hubspot.com", "official": true, "title": "Legacy Public App Creation Sunset", "retrievedAt": "2026-10-20", "status": "hand_checked" },
+    { "id": "src-7", "url": "https://community.hubspot.com/t/new-marketplace-distribution-app-install-limits/139886", "host": "community.hubspot.com", "official": false, "title": "Community thread with staff replies on the install limits", "retrievedAt": "2026-10-20", "status": "hand_checked" }
+  ],
+  "probes": [
+    { "id": "probe-authorize", "kind": "authorize", "target": "https://app.hubspot.com/oauth/authorize", "ok": false, "summary": "Probe could not run: app.hubspot.com disallows automated fetching of the authorize endpoint (robots).", "result": { "blocked": "robots" }, "ranAt": "2026-10-20T14:50:00.000Z" },
+    { "id": "probe-discovery", "kind": "discovery", "target": "https://app.hubspot.com/.well-known/openid-configuration", "ok": true, "summary": "No OpenID discovery document at app.hubspot.com; endpoints come from the docs.", "result": { "found": false, "method": "fetch tool, 2026-10-20" }, "ranAt": "2026-10-20T14:50:00.000Z" }
+  ],
+  "steps": [
+    { "n": 1, "title": "Create or sign in to a HubSpot developer account", "owner": "only_you", "inputs": ["A HubSpot developer account; a test account for installs"], "url": "https://app.hubspot.com/developer", "claimIds": ["c12"] },
+    { "n": 2, "title": "Create the app as a project with the CLI and choose marketplace distribution", "detail": "Run hs project create. Distribution is a choice between allowlisted accounts and the Marketplace; pick marketplace if any customer outside your allowlist will install.", "owner": "agent", "inputs": ["HubSpot CLI installed and authenticated", "App name"], "url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app", "claimIds": ["c10", "c11"] },
+    { "n": 3, "title": "Configure OAuth with the scopes you need and your redirect URL", "detail": "Listed apps must use OAuth only, so do not mix in static tokens.", "owner": "agent", "inputs": ["Scope list", "Redirect URL from your auth config"], "claimIds": ["c15"] },
+    { "n": 4, "title": "Verify your domain in the developer account overview", "detail": "Without it, every installing user must type I accept the risk. With it they still see a not reviewed banner until you list.", "owner": "agent", "inputs": ["A domain you control and access to its DNS"], "url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/manage-apps-in-hubspot", "claimIds": ["c6", "c7", "c8", "c9"] },
+    { "n": 5, "title": "Ship to your first customers, up to 25 installs", "detail": "Count carefully: the cap is 25 installs and staff say there are no exceptions. Put the listing submission on the calendar for when you expect install 15 or so.", "owner": "agent", "inputs": ["A way to track install count"], "claimIds": ["c1", "c2", "c23"] },
+    { "n": 6, "title": "Reach three active installs on unaffiliated production accounts", "detail": "Test accounts and your own organization do not count.", "owner": "agent", "inputs": ["Three real customers"], "claimIds": ["c13", "c14"] },
+    { "n": 7, "title": "Prepare the Marketplace listing: setup documentation URL, support contact, terms of service and privacy policy URLs, pricing, shared data", "owner": "agent_prepares", "inputs": ["Setup docs URL", "Support contact", "Terms of service URL", "Privacy policy URL", "Pricing", "Shared data description"], "url": "https://developers.hubspot.com/docs/apps/developer-platform/list-apps/listing-your-app/app-marketplace-listing-requirements", "claimIds": ["c18"] },
+    { "n": 8, "title": "Submit the listing and plan for the review", "detail": "HubSpot states an initial review within 10 business days and at most 60 days end to end. Staff reported most reviews finish within 10 business days in May 2026. Listing lifts the 25 install cap and removes the banner.", "owner": "only_you", "inputs": ["Completed listing"], "claimIds": ["c16", "c17", "c24", "c5"] },
+    { "n": 9, "title": "Budget for the per account rate limit", "detail": "110 requests every 10 seconds per installing account.", "owner": "agent", "inputs": [], "url": "https://developers.hubspot.com/docs/guides/apps/api-usage/usage-details", "claimIds": ["c19"] }
+  ],
+  "playbooks": [
+    { "symptom": "The 26th customer cannot install the app.", "cause": "Unlisted marketplace distribution apps are capped at 25 installs and HubSpot grants no exceptions.", "fix": "Submit the Marketplace listing. You need three active unaffiliated installs, OAuth only, docs, support, terms, privacy policy and pricing. Initial review within 10 business days.", "waitDays": 14, "claimIds": ["c1", "c23", "c13", "c16"] },
+    { "symptom": "Customers balk at a warning that asks them to type I accept the risk.", "cause": "Your app has no verified domain and is not listed.", "fix": "Verify your domain in the developer overview page to soften the banner, and list the app to remove it.", "claimIds": ["c7", "c9", "c8"] },
+    { "symptom": "You cannot find the option to create a public app in the UI.", "cause": "Legacy public app creation closed on 23 June 2026. Apps are projects now.", "fix": "Install the HubSpot CLI and run hs project create with marketplace distribution.", "claimIds": ["c21", "c22", "c10"] },
+    { "symptom": "The listing came back rejected.", "cause": "A minimum requirement was missing: OAuth as the only auth method, minimal scopes, setup docs, support contact, live terms and privacy URLs, pricing, or the shared data table.", "fix": "Fix every item in the feedback and resubmit once. The whole process is capped at 60 days from feedback.", "waitDays": 14, "claimIds": ["c18", "c15", "c17"] }
+  ],
+  "artifacts": [
+    { "name": "Verified domain", "form": "A DNS record added from the developer account overview page", "kind": "domain_verification", "claimIds": ["c9"] },
+    { "name": "Setup documentation URL", "form": "A public page explaining installation, required for the listing", "kind": "other", "claimIds": ["c18"] },
+    { "name": "Terms of service and privacy policy URLs", "form": "Live public pages, required for the listing", "kind": "privacy_policy", "claimIds": ["c18"] },
+    { "name": "Support contact", "form": "A support email or page, required for the listing", "kind": "support_contact", "claimIds": ["c18"] }
+  ],
+  "gaps": [
+    { "what": "The authorize endpoint probe could not run because app.hubspot.com disallows automated fetching, so what a wrong client ID looks like to users is not recorded", "page": "https://app.hubspot.com/oauth/authorize" }
+  ],
+  "verificationNote": {
+    "tested": [
+      "Discovery probe: no OpenID discovery document at app.hubspot.com."
+    ],
+    "corrected": [
+      "HubSpot is Capped, not Open: the 25 install limit from 22 September 2025 was missing from the first research pass.",
+      "The legacy public app model is closed since 23 June 2026; the steps now use the projects based CLI flow."
+    ],
+    "unverified": [
+      "The 60 day figure is HubSpot's stated ceiling, not a measured time.",
+      "A recorded walkthrough with the available developer account is planned and will add Tested steps for the CLI and install screens; until then the screens are described from the docs."
+    ]
+  }
+}

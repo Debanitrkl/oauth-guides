@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-10-20",
+  "source": "Read by hand from each toolkit page on docs.composio.dev (Authentication Details section) on 2026-10-20. Regenerate from the toolkit API with: COMPOSIO_API_KEY=... npm run regen:managed-auth",
+  "toolkits": {
+    "github": { "managed": true, "schemes": ["OAUTH2"] },
+    "slack": { "managed": true, "schemes": ["OAUTH2"] },
+    "hubspot": { "managed": true, "schemes": ["OAUTH2", "API_KEY"] },
+    "gmail": { "managed": true, "schemes": ["OAUTH2"] },
+    "zoom": { "managed": true, "schemes": ["OAUTH2"] },
+    "instagram": { "managed": true, "schemes": ["OAUTH2"] },
+    "facebook": { "managed": true, "schemes": ["OAUTH2"] },
+    "dropbox": { "managed": true, "schemes": ["OAUTH2"] },
+    "linkedin": { "managed": true, "schemes": ["OAUTH2"] },
+    "spotify": { "managed": false, "schemes": ["OAUTH2"] },
+    "shopify": { "managed": false, "schemes": ["OAUTH2", "S2S_OAUTH2"] },
+    "salesforce": { "managed": true, "schemes": ["OAUTH2", "S2S_OAUTH2"] },
+    "notion": { "managed": true, "schemes": ["OAUTH2", "API_KEY"] },
+    "discord": { "managed": true, "schemes": ["OAUTH2"] },
+    "jira": { "managed": true, "schemes": ["OAUTH2", "API_KEY", "S2S_OAUTH2"] },
+    "stripe": { "managed": true, "schemes": ["OAUTH2", "API_KEY"] },
+    "canva": { "managed": true, "schemes": ["OAUTH2"] },
+    "xero": { "managed": false, "schemes": ["OAUTH2"] },
+    "quickbooks": { "managed": true, "schemes": ["OAUTH2"] },
+    "strava": { "managed": true, "schemes": ["OAUTH2"] },
+    "twitter": { "managed": false, "schemes": ["OAUTH2"] }
+  }
+}
