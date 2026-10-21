@@ -20,16 +20,26 @@ Environment variables (all optional except the first for live generation):
 | `ANTHROPIC_API_KEY` | Live generation. Two model calls per run: resolve and extract. |
 | `GUIDES_MODEL` | Model id, default `claude-sonnet-5-5`. Set it if your key lacks that model. |
 | `COMPOSIO_API_KEY` | Live managed auth check against `GET /api/v3.1/toolkits/{slug}`. Without it the bundled `data/managed-auth.json` answers. |
-| `BLOB_READ_WRITE_TOKEN` | Store generated guides in Vercel Blob. Without it they go to `.data/` next to the app. |
+| `AWS_ENDPOINT_URL_S3`, `BUCKET_NAME`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION` | Store generated guides and run records in a Tigris bucket (or any S3 compatible bucket). The deployed app uses this. |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob instead of a bucket. With neither set, guides go to `.data/` next to the app. |
 | `GUIDES_MOCK=1` | Run the pipeline from the fixture, no network, no model. |
 
 Other commands: `npm test` (rules, span check, SSRF guard), `npm run check:guides` (validate the six library guides through the same rules the live path uses), `npm run run:live "<app>"` (the pipeline from the command line with the same events the page shows), `npm run run:mock`, `npm run build`, `npm run regen:managed-auth` (refresh the bundled list from Composio's API). On a Mac, `start.command` and `stop.command` are double click launchers.
 
 A reviewer without server access can paste their own Anthropic key on the generate page ("Use your own Anthropic key"). It travels as a request header for that browser's runs, is used for the two model calls, and is never logged or stored by the server; it is remembered only in that browser if the box is ticked. `/api/health` reports mode, whether a server key is configured, the model id and the store, and never returns secrets.
 
-## Deploy to Vercel
+## Deploy to Vercel with Tigris storage
 
-Import the repo, set `ANTHROPIC_API_KEY`, add a Blob store (gives `BLOB_READ_WRITE_TOKEN`), deploy. `app/api/generate/route.ts` sets `maxDuration = 300`; confirm your plan allows it. The pipeline budgets 180 seconds and hard stops at 280.
+Generated guides and run records live in an S3 compatible bucket on Tigris. Library guides stay in git.
+
+1. In the Tigris console, create a private bucket (ours is `oauth-guides`) and an access key with read and write on that bucket. Tigris shows the key id and secret once.
+2. In Vercel, import `Debanitrkl/oauth-guides` (framework preset Next.js, no build overrides).
+3. Set the environment variables: `ANTHROPIC_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL_S3=https://t3.storage.dev`, `AWS_REGION=auto`, `BUCKET_NAME=oauth-guides`. Optional: `COMPOSIO_API_KEY`, `GUIDES_MODEL`.
+4. Deploy, then open `/api/health?check=store`. It reports `store: "tigris"` and one `HeadBucket` round trip, without echoing any secret. A wrong key shows up here, not on the first generation.
+
+If the Tigris Marketplace integration is used instead of a direct account, it injects the same `AWS_*` names and a bucket variable; the app accepts `BUCKET_NAME` or `TIGRIS_BUCKET_NAME`.
+
+`app/api/generate/route.ts` sets `maxDuration = 300`; confirm your plan allows it. The pipeline budgets 180 seconds and hard stops at 280. Objects are written as `guides/<slug>.json` and `runs/<runId>.json`; the bucket needs no public access because the app reads through the S3 API.
 
 ## What a reviewer should try
 
@@ -52,7 +62,7 @@ One Next.js app. Library guides live in `guides/*.json` as facts a person checke
 4. Verify spans: code keeps a claim only if its quote, normalized, is a substring of the fetched page. No span, no claim.
 5. Probe: four checks that need no account, run beside collect and extract: the OpenID discovery document, what an unregistered client sees at the authorize endpoint, whether the developer portal sits behind a login, whether the docs render.
 6. Tier and estimate: pure functions in `lib/rules.ts` assign the tier per scope class, the evidence labels, the step owners, the wait ranges and the effort estimate.
-7. Validate and persist: Zod validation, then Blob or `.data/`.
+7. Validate and persist: Zod validation, then the Tigris bucket, Vercel Blob or `.data/`.
 
 The model writes facts in exactly two stages. Everything that decides what the reader sees is code with unit tests.
 
@@ -67,7 +77,7 @@ The model writes facts in exactly two stages. Everything that decides what the r
 7. Managed auth is step zero. If Composio manages an app for the toolkit, the guide says to start there.
 8. One pipeline produces library and live guides. Library files hold facts; the same rules derive the rest at read time.
 9. Credential free probes run live. Walkthroughs with real accounts are recorded, never automated.
-10. Shortcuts for a one day build, each with its exit signal: pipeline inside one request (move to a queue past 4 minutes), guides in git and Blob (Postgres when a correction queue arrives), in memory rate limits (Upstash at launch).
+10. Shortcuts for a one day build, each with its exit signal: pipeline inside one request (move to a queue past 4 minutes), guides in git and an object bucket (Postgres when a correction queue arrives), in memory rate limits (Upstash at launch).
 
 ## What was tested, corrected, and left unverified
 
@@ -101,7 +111,7 @@ lib/rules.ts      tier, labels, owners, wait ranges, effort, next action, valida
 lib/pipeline/     resolve, collect, extract, verify, run, events
 lib/probes.ts     the four credential free probes
 lib/net.ts        SSRF guard and page fetcher
-lib/store.ts      Blob or .data persistence, run records
+lib/store.ts      Tigris (S3), Vercel Blob or .data persistence, run records
 lib/library.ts    loads guides/*.json and attempts/*.json through the rules
 guides/           six reviewed guides as facts
 attempts/         recorded walkthroughs

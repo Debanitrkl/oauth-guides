@@ -12,16 +12,18 @@
     "regen:managed-auth": "tsx scripts/regen-managed-auth.ts",
     "check:guides": "tsx scripts/check-guides.ts",
     "run:live": "tsx scripts/run-live.ts",
-    "run:mock": "tsx scripts/run-mock.ts"
+    "run:mock": "tsx scripts/run-mock.ts",
+    "check:store": "tsx scripts/store-check.ts"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.0",
+    "@aws-sdk/client-s3": "^3.1154.0",
+    "@vercel/blob": "^1.1.0",
+    "ai": "^5.0.0",
     "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "zod": "^3.25.76",
-    "ai": "^5.0.0",
-    "@ai-sdk/anthropic": "^2.0.0",
-    "@vercel/blob": "^1.1.0"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
@@ -31,8 +33,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "tailwindcss": "^4",
+    "tsx": "^4.19.0",
     "typescript": "^5",
-    "vitest": "^3.2.0",
-    "tsx": "^4.19.0"
+    "vitest": "^3.2.0"
   }
 }
