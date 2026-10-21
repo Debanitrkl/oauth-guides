@@ -8,7 +8,7 @@ import { slugify } from "../text";
 import { collect, CollectedPage } from "./collect";
 import { Emit, ResolveResult } from "./events";
 import { extract } from "./extract";
-import { isMock } from "./model";
+import { isMock, ModelAuth } from "./model";
 import { resolveQuery } from "./resolve";
 import { verifyClaims } from "./verify";
 
@@ -21,10 +21,10 @@ export const BUDGET = {
   cacheDays: 7,
 };
 
-export type RunOptions = { query: string; force?: boolean; signal?: AbortSignal; apiKey?: string };
+export type RunOptions = { query: string; force?: boolean; signal?: AbortSignal; auth?: ModelAuth };
 
 export type Deps = {
-  resolve: (q: string, signal?: AbortSignal, apiKey?: string) => Promise<ResolveResult>;
+  resolve: (q: string, signal?: AbortSignal, auth?: ModelAuth) => Promise<ResolveResult>;
   collect: typeof collect;
   extract: typeof extract;
   probes: typeof runProbes;
@@ -93,7 +93,7 @@ export async function runPipeline(opts: RunOptions, emit: Emit): Promise<void> {
 
   try {
     // 1 Resolve
-    const resolved = await stage("resolve", BUDGET.resolveMs, (s) => deps.resolve(opts.query, s, opts.apiKey));
+    const resolved = await stage("resolve", BUDGET.resolveMs, (s) => deps.resolve(opts.query, s, opts.auth));
     emit({ type: "resolved", result: resolved });
     if (resolved.kind !== "found") {
       if (resolved.kind === "no_oauth") {
@@ -140,13 +140,13 @@ export async function runPipeline(opts: RunOptions, emit: Emit): Promise<void> {
     let extraction: ExtractionOutput | null = null;
     if (fetched.length) {
       try {
-        const r = await stage("extract", BUDGET.extractMs, (s) => deps.extract(provider, pages, s, false, opts.apiKey));
+        const r = await stage("extract", BUDGET.extractMs, (s) => deps.extract(provider, pages, s, false, opts.auth));
         extraction = r.output;
         record.tokens = r.usage;
       } catch (e) {
         log(`Extract failed once (${e instanceof Error ? e.message : e}), retrying with half the input.`);
         try {
-          const r = await stage("extract-retry", BUDGET.extractMs, (s) => deps.extract(provider, pages, s, true, opts.apiKey));
+          const r = await stage("extract-retry", BUDGET.extractMs, (s) => deps.extract(provider, pages, s, true, opts.auth));
           extraction = r.output;
           record.tokens = r.usage;
         } catch (e2) {

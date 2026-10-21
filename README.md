@@ -18,6 +18,7 @@ Environment variables (all optional except the first for live generation):
 | Variable | Purpose |
 | --- | --- |
 | `ANTHROPIC_API_KEY` | Live generation. Two model calls per run: resolve and extract. |
+| `ANTHROPIC_WORKSPACE_ID` | Only for a user scoped key (`sk-ant-usr-`), which the API refuses without its workspace id. Regular keys need nothing here. |
 | `GUIDES_MODEL` | Model id, default `claude-sonnet-5-5`. Set it if your key lacks that model. |
 | `COMPOSIO_API_KEY` | Live managed auth check against `GET /api/v3.1/toolkits/{slug}`. Without it the bundled `data/managed-auth.json` answers. |
 | `AWS_ENDPOINT_URL_S3`, `BUCKET_NAME`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION` | Store generated guides and run records in a Tigris bucket (or any S3 compatible bucket). The deployed app uses this. |
@@ -26,7 +27,7 @@ Environment variables (all optional except the first for live generation):
 
 Other commands: `npm test` (rules, span check, SSRF guard), `npm run check:guides` (validate the six library guides through the same rules the live path uses), `npm run run:live "<app>"` (the pipeline from the command line with the same events the page shows), `npm run run:mock`, `npm run build`, `npm run regen:managed-auth` (refresh the bundled list from Composio's API). On a Mac, `start.command` and `stop.command` are double click launchers.
 
-A reviewer without server access can paste their own Anthropic key on the generate page ("Use your own Anthropic key"). It travels as a request header for that browser's runs, is used for the two model calls, and is never logged or stored by the server; it is remembered only in that browser if the box is ticked. `/api/health` reports mode, whether a server key is configured, the model id and the store, and never returns secrets.
+A reviewer without server access can paste their own Anthropic key on the generate page ("Use your own Anthropic key"), or in the prompt that opens on first visit when the deployment has no server key. It travels as a request header for that browser's runs, is used for the two model calls, and is never logged or stored by the server; it is remembered only in that browser if the box is ticked. A user scoped key (`sk-ant-usr-`) asks for its workspace id beside it; other keys do not. The server's workspace id is never attached to a reviewer's key. `/api/health` reports mode, whether a server key is configured, the model id and the store, and never returns secrets.
 
 ## Deploy to Vercel with Tigris storage
 
@@ -34,7 +35,7 @@ Generated guides and run records live in an S3 compatible bucket on Tigris. Libr
 
 1. In the Tigris console, create a private bucket (ours is `oauth-guides`) and an access key with read and write on that bucket. Tigris shows the key id and secret once.
 2. In Vercel, import `Debanitrkl/oauth-guides` (framework preset Next.js, no build overrides).
-3. Set the environment variables: `ANTHROPIC_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL_S3=https://t3.storage.dev`, `AWS_REGION=auto`, `BUCKET_NAME=oauth-guides`. The `TIGRIS_STORAGE_*` names the Tigris console prints (`TIGRIS_STORAGE_ACCESS_KEY_ID`, `TIGRIS_STORAGE_SECRET_ACCESS_KEY`, `TIGRIS_STORAGE_ENDPOINT`) are accepted as is, so that block can be pasted unchanged, plus `BUCKET_NAME`. Optional: `COMPOSIO_API_KEY`, `GUIDES_MODEL`.
+3. Set the environment variables: `ANTHROPIC_API_KEY` (plus `ANTHROPIC_WORKSPACE_ID` if that key is user scoped), `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL_S3=https://t3.storage.dev`, `AWS_REGION=auto`, `BUCKET_NAME=oauth-guides`. The `TIGRIS_STORAGE_*` names the Tigris console prints (`TIGRIS_STORAGE_ACCESS_KEY_ID`, `TIGRIS_STORAGE_SECRET_ACCESS_KEY`, `TIGRIS_STORAGE_ENDPOINT`) are accepted as is, so that block can be pasted unchanged, plus `BUCKET_NAME`. Optional: `COMPOSIO_API_KEY`, `GUIDES_MODEL`.
 4. Deploy, then open `/api/health?check=store`. It reports `store: "tigris"` and one `HeadBucket` round trip, without echoing any secret. A wrong key shows up here, not on the first generation.
 
 The app accepts `BUCKET_NAME`, `TIGRIS_BUCKET_NAME`, `TIGRIS_STORAGE_BUCKET` or `TIGRIS_STORAGE_BUCKET_NAME` for the bucket, so the Tigris Marketplace integration's variables work without renaming.

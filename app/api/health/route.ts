@@ -1,4 +1,4 @@
-import { hasServerKey, isMock, modelId } from "@/lib/pipeline/model";
+import { hasServerKey, hasServerWorkspace, isMock, modelId } from "@/lib/pipeline/model";
 import { storeKind, storeStatus } from "@/lib/store";
 
 export const runtime = "nodejs";
@@ -14,6 +14,7 @@ export async function GET(req: Request) {
   const body: Record<string, unknown> = {
     mock: isMock(),
     serverKey: hasServerKey(),
+    serverWorkspace: hasServerWorkspace(),
     model: modelId(),
     store: storeKind(),
     composioKey: !!process.env.COMPOSIO_API_KEY,
