@@ -56,14 +56,14 @@ const STAGES = [
   ["Verify spans", "Code keeps a claim only if its quote, normalized, is a substring of the fetched page. No span, no claim.", false],
   ["Probe", "Four checks that need no account: the discovery document, what an unregistered client sees at the authorize endpoint, whether the portal sits behind a login, whether the docs render.", false],
   ["Tier and estimate", "Pure functions assign the tier per scope class, the labels, the step owners, the wait ranges and the effort estimate.", false],
-  ["Validate and persist", "Schema validation, then Vercel Blob or a local folder, plus a run record with stage timings and the dropped claim count.", false],
+  ["Validate and persist", "Schema validation, then a Tigris bucket over the S3 API (a local folder in development), plus a run record with stage timings and the dropped claim count.", false],
 ] as const;
 
 const TRADEOFFS = [
   ["Pipeline inside one streaming request", "Queue and worker with polling", "Runs pass 4 minutes, need to survive a closed tab, or exceed 5 concurrent"],
   ["Model fenced to resolve and extract", "An agent loop deciding tier and labels", "Never for tiering. A drafting pass for artifacts arrives in phase 2"],
   ["Verbatim span check", "Trust model citations, or a second model as judge", "Drop rate above 20 percent, then fuzzy matching with a shown score"],
-  ["Guides in git plus Blob", "Postgres", "A correction queue, search over guides, or a reviewer workflow"],
+  ["Guides in git plus an object bucket", "Postgres", "A correction queue, search over guides, or a reviewer workflow"],
   ["Composio API with a bundled fallback", "API only", "Never remove the fallback; regenerate the list on deploy"],
   ["Credential free probes live, walkthroughs recorded", "Browser agent with the developer's credentials", "Phase 3, as a separate service with explicit consent"],
   ["In memory rate limiting", "A hosted rate limiter", "Public launch"],
