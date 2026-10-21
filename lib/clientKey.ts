@@ -8,7 +8,6 @@
  */
 
 export const KEY_STORAGE = "oauth-guides.anthropicKey";
-export const WORKSPACE_STORAGE = "oauth-guides.anthropicWorkspace";
 export const PROMPT_DISMISSED = "oauth-guides.keyPromptDismissed";
 /** Fired on window after the key changes, so every mounted component re-reads it. */
 export const KEY_EVENT = "oauth-guides:key";
@@ -16,37 +15,34 @@ export const KEY_EVENT = "oauth-guides:key";
 export const PROMPT_EVENT = "oauth-guides:key-prompt";
 
 export const KEY_PATTERN = /^sk-ant-[A-Za-z0-9_-]{20,}$/;
-export const WORKSPACE_PATTERN = /^wrkspc_[A-Za-z0-9]{8,}$/;
-/** User scoped keys need a workspace id beside them; the API refuses them without one. */
-export const isUserScopedKey = (key: string) => key.trim().startsWith("sk-ant-usr-");
 
-export type SavedKey = { key: string; workspaceId: string; remembered: boolean };
+export type SavedKey = { key: string; remembered: boolean };
 
 export function readKey(): SavedKey | null {
   try {
     const local = window.localStorage.getItem(KEY_STORAGE);
-    if (local) return { key: local, workspaceId: window.localStorage.getItem(WORKSPACE_STORAGE) ?? "", remembered: true };
+    if (local) return { key: local, remembered: true };
     const session = window.sessionStorage.getItem(KEY_STORAGE);
-    if (session) return { key: session, workspaceId: window.sessionStorage.getItem(WORKSPACE_STORAGE) ?? "", remembered: false };
+    if (session) return { key: session, remembered: false };
   } catch {
     // storage unavailable
   }
   return null;
 }
 
-export function writeKey(key: string, workspaceId: string, remember: boolean): void {
+export function writeKey(key: string, remember: boolean): void {
   const value = key.trim();
-  const ws = workspaceId.trim();
   try {
-    const stores: Storage[] = [window.localStorage, window.sessionStorage];
-    for (const st of stores) {
-      st.removeItem(KEY_STORAGE);
-      st.removeItem(WORKSPACE_STORAGE);
+    if (!value) {
+      window.localStorage.removeItem(KEY_STORAGE);
+      window.sessionStorage.removeItem(KEY_STORAGE);
+    } else if (remember) {
+      window.localStorage.setItem(KEY_STORAGE, value);
+      window.sessionStorage.removeItem(KEY_STORAGE);
+    } else {
+      window.sessionStorage.setItem(KEY_STORAGE, value);
+      window.localStorage.removeItem(KEY_STORAGE);
     }
-    if (!value) return;
-    const target = remember ? window.localStorage : window.sessionStorage;
-    target.setItem(KEY_STORAGE, value);
-    if (ws) target.setItem(WORKSPACE_STORAGE, ws);
   } catch {
     // storage unavailable: the key still works for this page through component state
   }

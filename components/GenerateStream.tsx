@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { isUserScopedKey, KEY_EVENT, openKeyPrompt, readKey, writeKey } from "@/lib/clientKey";
+import { KEY_EVENT, openKeyPrompt, readKey, writeKey } from "@/lib/clientKey";
 import { PipelineEvent, ResolveResult } from "@/lib/pipeline/events";
 import { Guide, Probe, Source } from "@/lib/schema";
 import { GuideView } from "./GuideView";
@@ -38,11 +38,9 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
 
   // Optional per run key. Sent as a header for this browser's runs only; the server never logs or stores it.
   const [ownKey, setOwnKey] = useState("");
-  const [ownWorkspace, setOwnWorkspace] = useState("");
   const [rememberKey, setRememberKey] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const ownKeyRef = useRef("");
-  const ownWorkspaceRef = useRef("");
   const [health, setHealth] = useState<Health | null>(null);
 
   // Load the saved key on mount and whenever the site-wide prompt saves one.
@@ -55,7 +53,6 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
       const saved = readKey();
       queueMicrotask(() => {
         setOwnKey(saved?.key ?? "");
-        setOwnWorkspace(saved?.workspaceId ?? "");
         setRememberKey(saved ? saved.remembered : false);
       });
     };
@@ -66,9 +63,8 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
 
   useEffect(() => {
     ownKeyRef.current = ownKey;
-    ownWorkspaceRef.current = ownWorkspace;
-    writeKey(ownKey, ownWorkspace, rememberKey);
-  }, [ownKey, ownWorkspace, rememberKey]);
+    writeKey(ownKey, rememberKey);
+  }, [ownKey, rememberKey]);
 
   useEffect(() => {
     if (!running) return;
@@ -121,7 +117,7 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
       case "error":
         setError({ message: e.message, stage: e.stage, partial: e.partial });
         // A run that started from the URL before the key was known: ask for it now.
-        if (/No Anthropic API key|anthropic-workspace-id/i.test(e.message)) openKeyPrompt();
+        if (/No Anthropic API key/i.test(e.message)) openKeyPrompt();
         break;
       case "log":
         setLogs((prev) => [...prev, e.message]);
@@ -140,9 +136,7 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
       try {
         const headers: Record<string, string> = { "content-type": "application/json" };
         const key = ownKeyRef.current.trim();
-        const workspace = ownWorkspaceRef.current.trim();
         if (key) headers["x-anthropic-key"] = key;
-        if (key && workspace) headers["x-anthropic-workspace"] = workspace;
         const res = await fetch("/api/generate", {
           method: "POST",
           headers,
@@ -271,32 +265,11 @@ export function GenerateStream({ initialQuery }: { initialQuery: string }) {
                 <span className="t-mono text-chalk-faint">{rememberKey ? "this browser only" : "this tab only"}</span>
               </label>
               {ownKey && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOwnKey("");
-                    setOwnWorkspace("");
-                  }}
-                  className="pill pill-ghost pill-sm"
-                >
+                <button type="button" onClick={() => setOwnKey("")} className="pill pill-ghost pill-sm">
                   Clear
                 </button>
               )}
             </div>
-            {(isUserScopedKey(ownKey) || ownWorkspace) && (
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <input
-                  value={ownWorkspace}
-                  onChange={(e) => setOwnWorkspace(e.target.value)}
-                  placeholder="wrkspc_..."
-                  autoComplete="off"
-                  spellCheck={false}
-                  aria-label="Anthropic workspace id"
-                  className="field min-w-0 flex-1 font-mono text-[13px]"
-                />
-                <span className="t-mono text-chalk-faint">A user scoped key (sk-ant-usr-) needs its workspace id</span>
-              </div>
-            )}
             <p className="mt-3 max-w-prose text-sm text-chalk-mid">
               Sent as a request header for your runs only. The server uses it for the two model calls in that run and does not log or store it. When the server has its own key, yours still takes precedence for your runs.
             </p>

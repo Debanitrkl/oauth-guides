@@ -1,7 +1,7 @@
 import { generateObject } from "ai";
 import { ExtractionOutput, Provider } from "../schema";
 import { CollectedPage } from "./collect";
-import { anthropic, ModelAuth, modelId } from "./model";
+import { anthropic, modelId } from "./model";
 
 const SYSTEM = `You extract facts about registering a third party OAuth app with a provider and getting it approved for production use by external users. You read page texts and return structured claims.
 
@@ -26,13 +26,13 @@ Hard rules:
 8. providerNotes.noOAuthReason only if the pages show the provider has no OAuth for third party apps.
 Use claim ids c1, c2, c3 and so on.`;
 
-export async function extract(provider: Provider, pages: CollectedPage[], signal?: AbortSignal, halve = false, auth?: ModelAuth): Promise<{ output: ExtractionOutput; usage?: { input: number; output: number } }> {
+export async function extract(provider: Provider, pages: CollectedPage[], signal?: AbortSignal, halve = false, apiKey?: string): Promise<{ output: ExtractionOutput; usage?: { input: number; output: number } }> {
   const usable = pages.filter((p) => p.source.status === "fetched" && p.text);
   const budget = halve ? 6000 : 12000;
   const body = usable
     .map((p) => `### SOURCE ${p.source.id} | ${p.source.official ? "official" : "community"} | ${p.source.url}\n${p.text.slice(0, budget)}`)
     .join("\n\n");
-  const model = anthropic(auth)(modelId());
+  const model = anthropic(apiKey)(modelId());
   const res = await generateObject({
     model,
     schema: ExtractionOutput,

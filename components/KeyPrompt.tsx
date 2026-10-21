@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { announceKeyChange, dismissPrompt, isUserScopedKey, KEY_PATTERN, PROMPT_EVENT, promptDismissed, readKey, WORKSPACE_PATTERN, writeKey } from "@/lib/clientKey";
+import { announceKeyChange, dismissPrompt, KEY_PATTERN, PROMPT_EVENT, promptDismissed, readKey, writeKey } from "@/lib/clientKey";
 
 /**
  * Asks for the reviewer's Anthropic key on first visit when the deployment
@@ -11,7 +11,6 @@ import { announceKeyChange, dismissPrompt, isUserScopedKey, KEY_PATTERN, PROMPT_
 export function KeyPrompt({ needsKey }: { needsKey: boolean }) {
   const [open, setOpen] = useState(false);
   const [key, setKey] = useState("");
-  const [workspaceId, setWorkspaceId] = useState("");
   const [remember, setRemember] = useState(true);
   const [touched, setTouched] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -21,7 +20,6 @@ export function KeyPrompt({ needsKey }: { needsKey: boolean }) {
       const saved = readKey();
       queueMicrotask(() => {
         setKey(saved?.key ?? "");
-        setWorkspaceId(saved?.workspaceId ?? "");
         setRemember(saved ? saved.remembered : true);
         setTouched(false);
         setOpen(true);
@@ -44,16 +42,12 @@ export function KeyPrompt({ needsKey }: { needsKey: boolean }) {
 
   if (!open) return null;
 
-  const keyOk = KEY_PATTERN.test(key.trim());
-  const userScoped = isUserScopedKey(key);
-  const ws = workspaceId.trim();
-  const workspaceOk = ws ? WORKSPACE_PATTERN.test(ws) : !userScoped;
-  const valid = keyOk && workspaceOk;
+  const valid = KEY_PATTERN.test(key.trim());
 
   function save() {
     setTouched(true);
     if (!valid) return;
-    writeKey(key, workspaceId, remember);
+    writeKey(key, remember);
     announceKeyChange();
     setOpen(false);
   }
@@ -89,26 +83,10 @@ export function KeyPrompt({ needsKey }: { needsKey: boolean }) {
             autoComplete="off"
             spellCheck={false}
             aria-label="Your Anthropic API key"
-            aria-invalid={touched && !keyOk}
+            aria-invalid={touched && !valid}
             className="field w-full font-mono text-[13px]"
           />
-          {touched && !keyOk && <p className="t-mono text-flare-soft">That does not look like an Anthropic key. They start with sk-ant-.</p>}
-          {(userScoped || ws) && (
-            <div className="space-y-2">
-              <input
-                value={workspaceId}
-                onChange={(e) => setWorkspaceId(e.target.value)}
-                placeholder="wrkspc_..."
-                autoComplete="off"
-                spellCheck={false}
-                aria-label="Anthropic workspace id"
-                aria-invalid={touched && !workspaceOk}
-                className="field w-full font-mono text-[13px]"
-              />
-              <p className="t-mono text-chalk-faint">A user scoped key (sk-ant-usr-) only works with its workspace id, from the Anthropic console under Workspaces.</p>
-              {touched && !workspaceOk && <p className="t-mono text-flare-soft">{ws ? "Workspace ids start with wrkspc_." : "This key needs its workspace id."}</p>}
-            </div>
-          )}
+          {touched && !valid && <p className="t-mono text-flare-soft">That does not look like an Anthropic key. They start with sk-ant-.</p>}
           <label className="flex items-center gap-2 text-sm text-chalk-mid">
             <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
             Remember in this browser

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Provider } from "../schema";
 import { hostOf, slugify } from "../text";
 import { ResolveResult } from "./events";
-import { anthropic, lastJsonObject, ModelAuth, modelId } from "./model";
+import { anthropic, lastJsonObject, modelId } from "./model";
 
 const ResolveSchema = z.object({
   status: z.enum(["found", "no_oauth", "ambiguous"]),
@@ -39,8 +39,8 @@ const SYSTEM = `You resolve a developer's query (an app name or website) to the 
 }
 Rules: no_oauth means the product has no OAuth for third party apps at all (API keys only, or no API). If the query names a company with several distinct OAuth products, set ambiguous and list them. Never invent URLs: every URL must come from search results or be the provider's well known root. Output the JSON only.`;
 
-export async function resolveQuery(query: string, signal?: AbortSignal, auth?: ModelAuth): Promise<ResolveResult> {
-  const provider = anthropic(auth);
+export async function resolveQuery(query: string, signal?: AbortSignal, apiKey?: string): Promise<ResolveResult> {
+  const provider = anthropic(apiKey);
   const model = provider(modelId());
   let text = "";
   try {

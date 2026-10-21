@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { PipelineEvent } from "@/lib/pipeline/events";
-import { ModelAuth, WORKSPACE_PATTERN } from "@/lib/pipeline/model";
 import { runPipeline } from "@/lib/pipeline/run";
 
 export const runtime = "nodejs";
@@ -33,17 +32,12 @@ export async function POST(req: NextRequest) {
   }
   const query = (body.query ?? "").trim();
   if (!query || query.length > 200) return Response.json({ error: "Query must be 1 to 200 characters." }, { status: 400 });
-  // An optional per request key, and for user scoped keys the workspace id
-  // the API requires beside it. Used for this run only, never logged or stored.
+  // An optional per request key. Used for this run only, never logged or stored.
   const headerKey = (req.headers.get("x-anthropic-key") ?? "").trim();
   if (headerKey && !/^sk-ant-[A-Za-z0-9_-]{20,}$/.test(headerKey)) {
     return Response.json({ error: "That does not look like an Anthropic API key." }, { status: 400 });
   }
-  const headerWorkspace = (req.headers.get("x-anthropic-workspace") ?? "").trim();
-  if (headerWorkspace && !WORKSPACE_PATTERN.test(headerWorkspace)) {
-    return Response.json({ error: "That does not look like an Anthropic workspace id (wrkspc_...)." }, { status: 400 });
-  }
-  const auth: ModelAuth = { apiKey: headerKey || undefined, workspaceId: headerWorkspace || undefined };
+  const apiKey = headerKey || undefined;
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   if (process.env.NODE_ENV === "production" && rateLimited(ip)) {
     return Response.json({ error: "Rate limit: 10 generations per hour per address." }, { status: 429 });
@@ -71,7 +65,7 @@ export async function POST(req: NextRequest) {
           clearInterval(heartbeat);
         }
       }, 10_000);
-      runPipeline({ query, force: !!body.force, signal: abort.signal, auth }, send)
+      runPipeline({ query, force: !!body.force, signal: abort.signal, apiKey }, send)
         .catch((e) => send({ type: "error", message: e instanceof Error ? e.message : String(e), stage: "run", partial: false }))
         .finally(() => {
           clearInterval(heartbeat);
