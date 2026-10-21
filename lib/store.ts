@@ -30,8 +30,19 @@ export type RunRecord = {
 
 export type StoreKind = "tigris" | "blob" | "local";
 
-const bucketName = () => process.env.BUCKET_NAME ?? process.env.TIGRIS_BUCKET_NAME ?? "";
-const s3Enabled = () => !!process.env.AWS_ENDPOINT_URL_S3 && !!bucketName();
+/**
+ * Tigris prints its credentials under two naming schemes: the AWS_* names its
+ * docs use, and TIGRIS_STORAGE_* from the console's environment variable
+ * toggle and the Vercel integration. Either set works; AWS_* wins when both
+ * are present.
+ */
+const env = (...names: string[]) => names.map((n) => process.env[n]).find((v) => !!v);
+const s3Endpoint = () => env("AWS_ENDPOINT_URL_S3", "TIGRIS_STORAGE_ENDPOINT", "TIGRIS_ENDPOINT_URL_S3");
+const s3AccessKeyId = () => env("AWS_ACCESS_KEY_ID", "TIGRIS_STORAGE_ACCESS_KEY_ID");
+const s3SecretAccessKey = () => env("AWS_SECRET_ACCESS_KEY", "TIGRIS_STORAGE_SECRET_ACCESS_KEY");
+const s3Region = () => env("AWS_REGION", "TIGRIS_STORAGE_REGION") ?? "auto";
+const bucketName = () => env("BUCKET_NAME", "TIGRIS_BUCKET_NAME", "TIGRIS_STORAGE_BUCKET", "TIGRIS_STORAGE_BUCKET_NAME") ?? "";
+const s3Enabled = () => !!s3Endpoint() && !!bucketName();
 const blobEnabled = () => !!process.env.BLOB_READ_WRITE_TOKEN;
 const dataDir = () => process.env.GUIDES_DATA_DIR ?? path.join(process.cwd(), ".data");
 
@@ -50,13 +61,15 @@ let s3Mod: S3Module | null = null;
 async function s3(): Promise<{ mod: S3Module; client: InstanceType<S3Module["S3Client"]>; bucket: string }> {
   if (!s3Mod) s3Mod = await import("@aws-sdk/client-s3");
   if (!s3Client) {
-    // The SDK reads AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION and
-    // AWS_ENDPOINT_URL_S3 from the environment on its own; endpoint and
-    // region are passed explicitly so a missing AWS_REGION does not fail.
+    const accessKeyId = s3AccessKeyId();
+    const secretAccessKey = s3SecretAccessKey();
     s3Client = new s3Mod.S3Client({
-      region: process.env.AWS_REGION ?? "auto",
-      endpoint: process.env.AWS_ENDPOINT_URL_S3,
+      region: s3Region(),
+      endpoint: s3Endpoint(),
       forcePathStyle: false,
+      // Explicit credentials when either naming scheme supplies them;
+      // otherwise the SDK's own provider chain (instance roles and the like).
+      ...(accessKeyId && secretAccessKey ? { credentials: { accessKeyId, secretAccessKey } } : {}),
     });
   }
   return { mod: s3Mod, client: s3Client, bucket: bucketName() };
@@ -242,8 +255,8 @@ export async function storeStatus(): Promise<{ kind: StoreKind; ok: boolean; det
   const kind = storeKind();
   try {
     if (kind === "tigris") {
-      if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
-        return { kind, ok: false, detail: "AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY is not set" };
+      if (!s3AccessKeyId() || !s3SecretAccessKey()) {
+        return { kind, ok: false, detail: "No access key: set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (or the TIGRIS_STORAGE_* names)" };
       }
       const { mod, client, bucket } = await s3();
       await client.send(new mod.HeadBucketCommand({ Bucket: bucket }));

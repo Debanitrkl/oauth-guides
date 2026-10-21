@@ -34,10 +34,10 @@ Generated guides and run records live in an S3 compatible bucket on Tigris. Libr
 
 1. In the Tigris console, create a private bucket (ours is `oauth-guides`) and an access key with read and write on that bucket. Tigris shows the key id and secret once.
 2. In Vercel, import `Debanitrkl/oauth-guides` (framework preset Next.js, no build overrides).
-3. Set the environment variables: `ANTHROPIC_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL_S3=https://t3.storage.dev`, `AWS_REGION=auto`, `BUCKET_NAME=oauth-guides`. Optional: `COMPOSIO_API_KEY`, `GUIDES_MODEL`.
+3. Set the environment variables: `ANTHROPIC_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL_S3=https://t3.storage.dev`, `AWS_REGION=auto`, `BUCKET_NAME=oauth-guides`. The `TIGRIS_STORAGE_*` names the Tigris console prints (`TIGRIS_STORAGE_ACCESS_KEY_ID`, `TIGRIS_STORAGE_SECRET_ACCESS_KEY`, `TIGRIS_STORAGE_ENDPOINT`) are accepted as is, so that block can be pasted unchanged, plus `BUCKET_NAME`. Optional: `COMPOSIO_API_KEY`, `GUIDES_MODEL`.
 4. Deploy, then open `/api/health?check=store`. It reports `store: "tigris"` and one `HeadBucket` round trip, without echoing any secret. A wrong key shows up here, not on the first generation.
 
-If the Tigris Marketplace integration is used instead of a direct account, it injects the same `AWS_*` names and a bucket variable; the app accepts `BUCKET_NAME` or `TIGRIS_BUCKET_NAME`.
+The app accepts `BUCKET_NAME`, `TIGRIS_BUCKET_NAME`, `TIGRIS_STORAGE_BUCKET` or `TIGRIS_STORAGE_BUCKET_NAME` for the bucket, so the Tigris Marketplace integration's variables work without renaming.
 
 `app/api/generate/route.ts` sets `maxDuration = 300`; confirm your plan allows it. The pipeline budgets 180 seconds and hard stops at 280. Objects are written as `guides/<slug>.json` and `runs/<runId>.json`; the bucket needs no public access because the app reads through the S3 API.
 
